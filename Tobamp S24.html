@@ -1,0 +1,2179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Classic Tobamp S24</title>
+    <!-- Tailwind CSS for utility fallback -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        winamp: {
+                            bg: '#252528',
+                            dark: '#1e1e20',
+                            borderDark: '#0e0e10',
+                            borderLight: '#4e4e54',
+                            accent: '#00ff00',
+                            amber: '#ffb000',
+                            blueTitle: '#000080',
+                            panel: '#2b2b2f'
+                        }
+                    },
+                    fontFamily: {
+                        pixel: ['Courier New', Courier, monospace],
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #0b0b0e;
+            color: #c0c0c0;
+            font-family: 'Courier New', Courier, monospace;
+            user-select: none;
+            -webkit-touch-callout: none;
+        }
+        /* Classic Winamp Bevels */
+        .winamp-window {
+            background: #2b2b2f;
+            border-top: 2px solid #5a5a64;
+            border-left: 2px solid #5a5a64;
+            border-right: 2px solid #111113;
+            border-bottom: 2px solid #111113;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.85);
+        }
+        .winamp-titlebar {
+            background: linear-gradient(90deg, #000046 0%, #0a3c8c 50%, #000046 100%);
+            color: #e5c158;
+            font-weight: bold;
+            letter-spacing: 1px;
+            border-top: 1px solid #4a6ea8;
+            border-bottom: 1px solid #090910;
+        }
+        .winamp-inset {
+            background: #000000;
+            border-top: 2px solid #111113;
+            border-left: 2px solid #111113;
+            border-right: 2px solid #4e4e54;
+            border-bottom: 2px solid #4e4e54;
+        }
+        .winamp-outset {
+            border-top: 2px solid #5a5a64;
+            border-left: 2px solid #5a5a64;
+            border-right: 2px solid #111113;
+            border-bottom: 2px solid #111113;
+            background: #333338;
+            transition: transform 0.05s;
+        }
+        .winamp-outset:active, .winamp-btn-active {
+            border-top: 2px solid #111113 !important;
+            border-left: 2px solid #111113 !important;
+            border-right: 2px solid #5a5a64 !important;
+            border-bottom: 2px solid #5a5a64 !important;
+            background: #232327 !important;
+        }
+        /* LED Green/Amber Glow */
+        .led-text {
+            color: #00ff00;
+            text-shadow: 0 0 6px rgba(0,255,0,0.65);
+        }
+        .amber-text {
+            color: #ffb000;
+            text-shadow: 0 0 6px rgba(255,176,0,0.65);
+        }
+        .red-led-text {
+            color: #ff3333;
+            text-shadow: 0 0 6px rgba(255,51,51,0.65);
+        }
+        /* Retro Range Inputs */
+        input[type=range].winamp-slider {
+            -webkit-appearance: none;
+            appearance: none;
+            background: #0e0e11;
+            border-top: 1px solid #000;
+            border-left: 1px solid #000;
+            border-right: 1px solid #444;
+            border-bottom: 1px solid #444;
+        }
+        input[type=range].winamp-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 14px;
+            background: #c59b27;
+            border-top: 2px solid #ffe28a;
+            border-left: 2px solid #ffe28a;
+            border-right: 2px solid #523d04;
+            border-bottom: 2px solid #523d04;
+            cursor: pointer;
+        }
+        /* Vertical EQ Sliders with Colored Winamp Bar Indicators */
+        .eq-slider-wrapper {
+            height: 92px;
+            width: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            background: #070709;
+            border-top: 1px solid #000;
+            border-left: 1px solid #000;
+            border-right: 1px solid #3c3c42;
+            border-bottom: 1px solid #3c3c42;
+            overflow: hidden;
+        }
+        .eq-zero-line {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.28);
+            z-index: 1;
+            pointer-events: none;
+        }
+        .eq-color-bar {
+            position: absolute;
+            bottom: 0;
+            left: 2px;
+            right: 2px;
+            height: 50%;
+            z-index: 1;
+            pointer-events: none;
+            transition: height 0.06s ease, background 0.1s ease, opacity 0.1s ease;
+        }
+        input[type=range].eq-vertical {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 84px;
+            height: 22px;
+            background: transparent;
+            transform: rotate(-90deg);
+            cursor: pointer;
+            position: relative;
+            z-index: 3;
+        }
+        input[type=range].eq-vertical::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 14px;
+            height: 18px;
+            background: #c59b27;
+            border-top: 2px solid #ffe28a;
+            border-left: 2px solid #ffe28a;
+            border-right: 2px solid #523d04;
+            border-bottom: 2px solid #523d04;
+            box-shadow: 0 0 4px rgba(0,0,0,0.9);
+        }
+        input[type=range].eq-vertical.eq-modified::-webkit-slider-thumb {
+            background: #00e600;
+            border-top: 2px solid #99ff99;
+            border-left: 2px solid #99ff99;
+            border-right: 2px solid #004d00;
+            border-bottom: 2px solid #004d00;
+        }
+        @keyframes marquee {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+        .marquee-anim {
+            display: inline-block;
+            white-space: nowrap;
+            animation: marquee 14s linear infinite;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #111113;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4e4e54;
+            border: 1px solid #111113;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-start p-2 touch-manipulation">
+
+    <!-- Main Container optimized for Samsung Galaxy S24 (max-width 412px) -->
+    <div id="player-container" class="w-full max-w-[400px] flex flex-col space-y-2 pb-10">
+
+        <!-- ===================================================== -->
+        <!-- 1. WINAMP MAIN PLAYER MODULE                          -->
+        <!-- ===================================================== -->
+        <div class="winamp-window rounded-none p-1.5 flex flex-col space-y-2">
+            
+            <!-- Classic Title Bar -->
+            <div class="winamp-titlebar px-2 py-1 flex items-center justify-between text-xs">
+                <div class="flex items-center space-x-1.5">
+                    <i class="fa-solid fa-bolt text-amber-400 text-[11px]"></i>
+                    <span class="tracking-widest font-bold text-[11px]">TOBAMP 2.91</span>
+                </div>
+                <span class="text-[9px] text-amber-200/80 font-normal">S24 EDITION</span>
+            </div>
+
+            <!-- Main LCD Display Area -->
+            <div class="winamp-inset p-2 flex flex-col space-y-1.5 relative overflow-hidden">
+                <!-- Top Row: Status, Bitrate/SampleRate, Digital Timer -->
+                <div class="flex justify-between items-center">
+                    <div class="flex items-center space-x-1.5">
+                        <span id="status-light" class="w-2.5 h-2.5 rounded-full bg-[#003300] inline-block"></span>
+                        <span id="status-text" class="font-pixel text-[11px] text-green-500 font-bold uppercase">STOP</span>
+                    </div>
+                    <div class="flex items-center space-x-2 font-pixel text-[10px]">
+                        <span class="bg-[#111] px-1 border border-[#2a2a2e] amber-text" id="kbps-display">128 kbps</span>
+                        <span class="bg-[#111] px-1 border border-[#2a2a2e] led-text" id="khz-display">44 kHz</span>
+                    </div>
+                    <div class="flex items-center space-x-0.5 bg-[#071107] px-1.5 py-0.5 border border-[#1a2e1a] cursor-pointer" id="timer-box" title="Zeitmodus umschalten">
+                        <span id="time-min" class="font-pixel text-2xl font-bold led-text leading-none">00</span>
+                        <span class="font-pixel text-xl led-text animate-pulse leading-none">:</span>
+                        <span id="time-sec" class="font-pixel text-2xl font-bold led-text leading-none">00</span>
+                    </div>
+                </div>
+
+                <!-- Scrolling Track Title Marquee Bar -->
+                <div class="bg-[#080d08] px-1.5 py-1 border border-[#1f291f] overflow-hidden whitespace-nowrap relative">
+                    <div id="marquee-text" class="font-pixel text-xs led-text marquee-anim">
+                        *** TOBAMP 2.91 S24 - BITTE MP3 / ORDNER LADEN ODER WEBRADIO STARTEN ***
+                    </div>
+                </div>
+
+                <!-- Spectrum Analyzer Canvas + Mode Info Row -->
+                <div class="flex items-stretch space-x-2 h-14">
+                    <div class="flex-1 bg-[#050805] border border-[#1f291f] relative overflow-hidden">
+                        <canvas id="visualizer-canvas" class="w-full h-full block"></canvas>
+                    </div>
+                    <div class="w-24 flex flex-col justify-between bg-[#080b08] border border-[#1f291f] p-1 font-pixel text-[9px]">
+                        <div class="flex justify-between items-center">
+                            <span class="text-slate-400">QUELLE:</span>
+                            <span id="source-badge" class="amber-text font-bold">BEREIT</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-slate-400">KANAL:</span>
+                            <span class="led-text font-bold">STEREO</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-slate-400">TEMPO:</span>
+                            <span id="mini-speed-readout" class="amber-text font-bold">1.00x</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Volume & Balance Sliders Row -->
+            <div class="grid grid-cols-2 gap-2 px-1 pt-0.5">
+                <div class="flex flex-col space-y-0.5">
+                    <div class="flex justify-between font-pixel text-[9px]">
+                        <span class="text-slate-300">LAUTSTÄRKE</span>
+                        <span id="vol-readout" class="led-text">85%</span>
+                    </div>
+                    <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="0.85" class="winamp-slider w-full h-3.5">
+                </div>
+                <div class="flex flex-col space-y-0.5">
+                    <div class="flex justify-between font-pixel text-[9px]">
+                        <span class="text-slate-300">BALANCE</span>
+                        <span id="bal-readout" class="amber-text">MITTE</span>
+                    </div>
+                    <input type="range" id="balance-slider" min="-1" max="1" step="0.05" value="0" class="winamp-slider w-full h-3.5">
+                </div>
+            </div>
+
+            <!-- Track Seek Bar -->
+            <div class="px-1">
+                <input type="range" id="seek-slider" min="0" max="100" step="0.1" value="0" class="winamp-slider w-full h-4">
+            </div>
+
+            <!-- Transport Controls + Module Toggle Buttons (EQ, DJ, PL) -->
+            <div class="flex items-center justify-between px-1 pt-0.5 gap-1">
+                <!-- Transport Buttons -->
+                <div class="grid grid-cols-6 gap-1 flex-1">
+                    <button id="btn-prev" class="winamp-outset py-2 text-xs text-slate-200 active:text-green-400" title="Vorheriger Titel">
+                        <i class="fa-solid fa-backward-step"></i>
+                    </button>
+                    <button id="btn-play" class="winamp-outset py-2 text-xs text-green-400 active:text-amber-400" title="Abspielen">
+                        <i class="fa-solid fa-play"></i>
+                    </button>
+                    <button id="btn-pause" class="winamp-outset py-2 text-xs text-amber-400" title="Pause">
+                        <i class="fa-solid fa-pause"></i>
+                    </button>
+                    <button id="btn-stop" class="winamp-outset py-2 text-xs text-red-400" title="Stopp">
+                        <i class="fa-solid fa-stop"></i>
+                    </button>
+                    <button id="btn-next" class="winamp-outset py-2 text-xs text-slate-200 active:text-green-400" title="Nächster Titel">
+                        <i class="fa-solid fa-forward-step"></i>
+                    </button>
+                    <label class="winamp-outset py-2 text-xs text-amber-300 flex items-center justify-center cursor-pointer" title="MP3 Dateien öffnen">
+                        <i class="fa-solid fa-eject"></i>
+                        <input type="file" id="mp3-file-input" accept="audio/mp3,audio/*" multiple class="hidden">
+                    </label>
+                </div>
+
+                <!-- Shuffle & Repeat -->
+                <div class="flex space-x-1">
+                    <button id="btn-shuffle" class="winamp-outset px-2 py-2 font-pixel text-[9px] text-slate-400 font-bold" title="Zufallswiedergabe">SHUF</button>
+                    <button id="btn-repeat" class="winamp-outset px-2 py-2 font-pixel text-[9px] text-slate-400 font-bold" title="Wiederholen">REP</button>
+                </div>
+
+                <!-- Module Window Toggles: EQ, DJ, PL -->
+                <div class="flex space-x-1 border-l border-[#444] pl-1">
+                    <button id="btn-toggle-eq" class="winamp-outset winamp-btn-active px-2 py-1 font-pixel text-[9px] text-green-400 font-bold flex flex-col items-center">
+                        <span id="led-eq" class="w-1.5 h-1.5 rounded-full bg-green-400 mb-0.5 shadow-[0_0_4px_#00ff00]"></span>EQ
+                    </button>
+                    <button id="btn-toggle-dj" class="winamp-outset winamp-btn-active px-2 py-1 font-pixel text-[9px] text-green-400 font-bold flex flex-col items-center">
+                        <span id="led-dj" class="w-1.5 h-1.5 rounded-full bg-green-400 mb-0.5 shadow-[0_0_4px_#00ff00]"></span>DJ
+                    </button>
+                    <button id="btn-toggle-playlist" class="winamp-outset winamp-btn-active px-2 py-1 font-pixel text-[9px] text-green-400 font-bold flex flex-col items-center">
+                        <span id="led-pl" class="w-1.5 h-1.5 rounded-full bg-green-400 mb-0.5 shadow-[0_0_4px_#00ff00]"></span>PL
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===================================================== -->
+        <!-- 2. WINAMP GRAPHIC EQUALIZER MODULE (EQ)               -->
+        <!-- ===================================================== -->
+        <div id="equalizer-window" class="winamp-window rounded-none p-1.5 flex flex-col space-y-2">
+            <div class="winamp-titlebar px-2 py-1 flex items-center justify-between text-xs">
+                <span>TOBAMP GRAPHIC EQUALIZER</span>
+                <button id="btn-close-eq" class="px-1.5 text-[10px] bg-[#2b2b2f] text-slate-200 border border-slate-400">X</button>
+            </div>
+            
+            <div class="winamp-inset p-2 flex flex-col space-y-2">
+                <!-- Top EQ Bar: ON/OFF & Presets -->
+                <div class="flex flex-wrap justify-between items-center gap-1 border-b border-[#222] pb-1.5">
+                    <button id="btn-eq-power" class="winamp-outset winamp-btn-active px-2 py-1 text-[10px] font-pixel text-green-400 font-bold flex items-center gap-1">
+                        <span id="eq-power-led" class="w-2 h-2 rounded-full bg-green-400 inline-block"></span> ON
+                    </button>
+                    <div class="flex space-x-1">
+                        <button class="eq-preset-btn winamp-outset px-1.5 py-1 text-[9px] font-pixel text-slate-300 hover:text-green-400" data-preset="flat">FLAT</button>
+                        <button class="eq-preset-btn winamp-outset px-1.5 py-1 text-[9px] font-pixel text-slate-300 hover:text-green-400" data-preset="rock">ROCK</button>
+                        <button class="eq-preset-btn winamp-outset px-1.5 py-1 text-[9px] font-pixel text-slate-300 hover:text-green-400" data-preset="techno">TECHNO</button>
+                        <button class="eq-preset-btn winamp-outset px-1.5 py-1 text-[9px] font-pixel text-amber-400 hover:text-green-400" data-preset="bass">BASS+</button>
+                    </div>
+                </div>
+
+                <!-- Preamp + 10 Vertical Sliders with Colored Level Bars -->
+                <div class="grid grid-cols-11 gap-1 pt-1 items-center">
+                    <!-- Preamp Slider -->
+                    <div class="flex flex-col items-center border-r border-[#2a2a2e] pr-1">
+                        <span id="preamp-val-label" class="font-pixel text-[8px] text-slate-500 mb-0.5">0dB</span>
+                        <div class="eq-slider-wrapper" id="preamp-wrapper">
+                            <div class="eq-zero-line"></div>
+                            <div id="preamp-bar" class="eq-color-bar"></div>
+                            <input type="range" id="preamp-slider" min="-12" max="12" value="0" step="1" class="eq-vertical">
+                        </div>
+                        <span class="font-pixel text-[8px] text-amber-400 font-bold mt-1">PRE</span>
+                    </div>
+
+                    <!-- 10 Frequency Bands -->
+                    <div class="flex flex-col items-center">
+                        <span class="eq-val-label font-pixel text-[8px] text-slate-500 mb-0.5" data-label-band="0">0</span>
+                        <div class="eq-slider-wrapper"><div class="eq-zero-line"></div><div class="eq-color-bar" data-bar-band="0"></div><input type="range" min="-15" max="15" value="0" step="1" class="eq-slider eq-vertical" data-band="0"></div>
+                        <span class="eq-freq-label font-pixel text-[8px] text-slate-400 mt-1" data-freq-band="0">60</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <span class="eq-val-label font-pixel text-[8px] text-slate-500 mb-0.5" data-label-band="1">0</span>
+                        <div class="eq-slider-wrapper"><div class="eq-zero-line"></div><div class="eq-color-bar" data-bar-band="1"></div><input type="range" min="-15" max="15" value="0" step="1" class="eq-slider eq-vertical" data-band="1"></div>
+                        <span class="eq-freq-label font-pixel text-[8px] text-slate-400 mt-1" data-freq-band="1">170</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <span class="eq-val-label font-pixel text-[8px] text-slate-500 mb-0.5" data-label-band="2">0</span>
+                        <div class="eq-slider-wrapper"><div class="eq-zero-line"></div><div class="eq-color-bar" data-bar-band="2"></div><input type="range" min="-15" max="15" value="0" step="1" class="eq-slider eq-vertical" data-band="2"></div>
+                        <span class="eq-freq-label font-pixel text-[8px] text-slate-400 mt-1" data-freq-band="2">310</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <span class="eq-val-label font-pixel text-[8px] text-slate-500 mb-0.5" data-label-band="3">0</span>
+                        <div class="eq-slider-wrapper"><div class="eq-zero-line"></div><div class="eq-color-bar" data-bar-band="3"></div><input type="range" min="-15" max="15" value="0" step="1" class="eq-slider eq-vertical" data-band="3"></div>
+                        <span class="eq-freq-label font-pixel text-[8px] text-slate-400 mt-1" data-freq-band="3">600</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <span class="eq-val-label font-pixel text-[8px] text-slate-500 mb-0.5" data-label-band="4">0</span>
+                        <div class="eq-slider-wrapper"><div class="eq-zero-line"></div><div class="eq-color-bar" data-bar-band="4"></div><input type="range" min="-15" max="15" value="0" step="1" class="eq-slider eq-vertical" data-band="4"></div>
+                        <span class="eq-freq-label font-pixel text-[8px] text-slate-400 mt-1" data-freq-band="4">1K</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <span class="eq-val-label font-pixel text-[8px] text-slate-500 mb-0.5" data-label-band="5">0</span>
+                        <div class="eq-slider-wrapper"><div class="eq-zero-line"></div><div class="eq-color-bar" data-bar-band="5"></div><input type="range" min="-15" max="15" value="0" step="1" class="eq-slider eq-vertical" data-band="5"></div>
+                        <span class="eq-freq-label font-pixel text-[8px] text-slate-400 mt-1" data-freq-band="5">3K</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <span class="eq-val-label font-pixel text-[8px] text-slate-500 mb-0.5" data-label-band="6">0</span>
+                        <div class="eq-slider-wrapper"><div class="eq-zero-line"></div><div class="eq-color-bar" data-bar-band="6"></div><input type="range" min="-15" max="15" value="0" step="1" class="eq-slider eq-vertical" data-band="6"></div>
+                        <span class="eq-freq-label font-pixel text-[8px] text-slate-400 mt-1" data-freq-band="6">6K</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <span class="eq-val-label font-pixel text-[8px] text-slate-500 mb-0.5" data-label-band="7">0</span>
+                        <div class="eq-slider-wrapper"><div class="eq-zero-line"></div><div class="eq-color-bar" data-bar-band="7"></div><input type="range" min="-15" max="15" value="0" step="1" class="eq-slider eq-vertical" data-band="7"></div>
+                        <span class="eq-freq-label font-pixel text-[8px] text-slate-400 mt-1" data-freq-band="7">12K</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <span class="eq-val-label font-pixel text-[8px] text-slate-500 mb-0.5" data-label-band="8">0</span>
+                        <div class="eq-slider-wrapper"><div class="eq-zero-line"></div><div class="eq-color-bar" data-bar-band="8"></div><input type="range" min="-15" max="15" value="0" step="1" class="eq-slider eq-vertical" data-band="8"></div>
+                        <span class="eq-freq-label font-pixel text-[8px] text-slate-400 mt-1" data-freq-band="8">14K</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <span class="eq-val-label font-pixel text-[8px] text-slate-500 mb-0.5" data-label-band="9">0</span>
+                        <div class="eq-slider-wrapper"><div class="eq-zero-line"></div><div class="eq-color-bar" data-bar-band="9"></div><input type="range" min="-15" max="15" value="0" step="1" class="eq-slider eq-vertical" data-band="9"></div>
+                        <span class="eq-freq-label font-pixel text-[8px] text-slate-400 mt-1" data-freq-band="9">16K</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===================================================== -->
+        <!-- 3. TOBAMP DJ - TEMPO, PITCH & VINYL SCRATCH MODULE    -->
+        <!-- ===================================================== -->
+        <div id="dj-window" class="winamp-window rounded-none p-1.5 flex flex-col space-y-2">
+            <div class="winamp-titlebar px-2 py-1 flex items-center justify-between text-xs">
+                <div class="flex items-center space-x-1.5">
+                    <i class="fa-solid fa-compact-disc text-amber-400 text-[11px]"></i>
+                    <span>TOBAMP DJ DECK - TEMPO & SCRATCH</span>
+                </div>
+                <button id="btn-close-dj" class="px-1.5 text-[10px] bg-[#2b2b2f] text-slate-200 border border-slate-400">X</button>
+            </div>
+
+            <div class="winamp-inset p-2.5 flex flex-col space-y-2.5">
+                <!-- DJ LCD Status Header -->
+                <div class="flex justify-between items-center bg-[#070d07] border border-[#1c2e1c] px-2 py-1.5">
+                    <div class="flex flex-col">
+                        <span class="text-[9px] text-slate-400 uppercase">DJ Deck Status</span>
+                        <span id="dj-mode-status" class="font-pixel text-xs font-bold led-text">MP3 BEREIT</span>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-[9px] text-slate-400 uppercase block">Geschwindigkeit</span>
+                        <span id="dj-speed-display" class="font-pixel text-lg font-bold amber-text">100% (1.00x)</span>
+                    </div>
+                </div>
+
+                <!-- Dynamic Turntable / Vinyl Scratch Platter -->
+                <div class="bg-[#111115] border border-[#2a2a32] p-2.5 flex items-center justify-between gap-2 relative overflow-hidden">
+                    <!-- Left Info & Scratch Status -->
+                    <div class="flex flex-col justify-between space-y-1.5 w-28 shrink-0">
+                        <div class="bg-[#070b07] border border-[#1f291f] p-1.5">
+                            <span class="font-pixel text-[8px] text-slate-400 block">TURNTABLE:</span>
+                            <span id="vinyl-status-text" class="font-pixel text-[10px] led-text font-bold block">STANDBY</span>
+                        </div>
+                        <div class="bg-[#070b07] border border-[#1f291f] p-1.5">
+                            <span class="font-pixel text-[8px] text-slate-400 block">WINKEL / RPM:</span>
+                            <span id="vinyl-rpm-text" class="font-pixel text-[10px] amber-text font-bold block">33.3 RPM</span>
+                        </div>
+                        <div class="text-[8px] font-pixel text-slate-400 leading-tight">
+                            Drehe die Platte mit dem Finger zum <span class="text-amber-400 font-bold">Scratchen</span>!
+                        </div>
+                    </div>
+
+                    <!-- Interactive Rotating Vinyl SVG Platter -->
+                    <div class="relative flex items-center justify-center flex-1 py-1">
+                        <!-- Strobe Dots Rim -->
+                        <div id="vinyl-turntable-touch" class="relative w-36 h-36 rounded-full bg-[#1b1b20] border-4 border-[#3a3a44] shadow-[0_0_15px_rgba(0,0,0,0.9)] flex items-center justify-center cursor-grab active:cursor-grabbing touch-none select-none">
+                            <svg id="vinyl-disc-svg" viewBox="0 0 200 200" class="w-full h-full rounded-full pointer-events-none">
+                                <defs>
+                                    <radialGradient id="vinylGrad" cx="50%" cy="50%" r="50%">
+                                        <stop offset="0%" stop-color="#111113"/>
+                                        <stop offset="60%" stop-color="#0a0a0c"/>
+                                        <stop offset="80%" stop-color="#1c1c22"/>
+                                        <stop offset="95%" stop-color="#08080a"/>
+                                        <stop offset="100%" stop-color="#2a2a30"/>
+                                    </radialGradient>
+                                    <linearGradient id="vinylSheen" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stop-color="rgba(255,255,255,0)" />
+                                        <stop offset="45%" stop-color="rgba(255,255,255,0.03)" />
+                                        <stop offset="50%" stop-color="rgba(255,255,255,0.16)" />
+                                        <stop offset="55%" stop-color="rgba(255,255,255,0.03)" />
+                                        <stop offset="100%" stop-color="rgba(255,255,255,0)" />
+                                    </linearGradient>
+                                </defs>
+                                <!-- Base Record -->
+                                <circle cx="100" cy="100" r="97" fill="url(#vinylGrad)" />
+                                <!-- Light Sheen Reflection -->
+                                <circle cx="100" cy="100" r="96" fill="url(#vinylSheen)" />
+                                <!-- Concentric Record Grooves -->
+                                <circle cx="100" cy="100" r="88" fill="none" stroke="#26262e" stroke-width="0.8" stroke-dasharray="18 6" />
+                                <circle cx="100" cy="100" r="78" fill="none" stroke="#1f1f26" stroke-width="1" />
+                                <circle cx="100" cy="100" r="68" fill="none" stroke="#292933" stroke-width="0.8" stroke-dasharray="25 8" />
+                                <circle cx="100" cy="100" r="58" fill="none" stroke="#1d1d24" stroke-width="1" />
+                                <circle cx="100" cy="100" r="48" fill="none" stroke="#2c2c36" stroke-width="0.8" />
+                                <!-- Classic Tobamp Gold/Orange Center Label -->
+                                <circle cx="100" cy="100" r="35" fill="#c59b27" stroke="#ffe28a" stroke-width="1.5" />
+                                <circle cx="100" cy="100" r="27" fill="#18181c" />
+                                <!-- Label Text -->
+                                <text x="100" y="86" text-anchor="middle" fill="#00ff00" font-family="Courier New, monospace" font-size="8" font-weight="bold">TOBAMP</text>
+                                <text x="100" y="119" text-anchor="middle" fill="#ffb000" font-family="Courier New, monospace" font-size="7" font-weight="bold">DJ SCRATCH</text>
+                                <!-- High-Contrast DJ Cue Scratch Marker Line -->
+                                <line x1="100" y1="6" x2="100" y2="65" stroke="#00ff00" stroke-width="3.5" stroke-linecap="round" />
+                                <circle cx="100" cy="18" r="3.5" fill="#ffb000" />
+                                <!-- Center Spindle Hole -->
+                                <circle cx="100" cy="100" r="5" fill="#d4d4d8" stroke="#000" stroke-width="1.5" />
+                            </svg>
+                        </div>
+
+                        <!-- Classic Stylus Tonearm Overlay -->
+                        <svg viewBox="0 0 60 130" class="w-12 h-28 absolute -right-1 top-1 pointer-events-none opacity-90">
+                            <circle cx="45" cy="16" r="10" fill="#3a3a42" stroke="#666" stroke-width="2"/>
+                            <circle cx="45" cy="16" r="4" fill="#c59b27"/>
+                            <path d="M 45 16 L 38 88 L 22 108" fill="none" stroke="#9ca3af" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <rect x="15" y="102" width="10" height="14" rx="1" transform="rotate(35 20 109)" fill="#c59b27" stroke="#111" stroke-width="1"/>
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- Large Touch Tempo Fader (0.50x to 2.00x) -->
+                <div class="flex flex-col space-y-1 bg-[#16161a] p-2 border border-[#2a2a30]">
+                    <div class="flex justify-between text-[9px] font-pixel text-slate-400">
+                        <span>50% (0.5x)</span>
+                        <span class="text-green-400 font-bold">100% (1.0x)</span>
+                        <span>200% (2.0x)</span>
+                    </div>
+                    <input type="range" id="dj-tempo-slider" min="0.50" max="2.00" step="0.01" value="1.00" class="winamp-slider w-full h-5">
+                </div>
+
+                <!-- Quick Nudge Buttons & Pitch Lock Toggle -->
+                <div class="grid grid-cols-6 gap-1">
+                    <button id="btn-dj-minus10" class="winamp-outset py-2 text-[10px] font-pixel text-slate-200 font-bold active:text-amber-400">-10%</button>
+                    <button id="btn-dj-minus1" class="winamp-outset py-2 text-[10px] font-pixel text-slate-200 font-bold active:text-amber-400">-1%</button>
+                    <button id="btn-dj-reset" class="winamp-outset py-2 col-span-2 text-[10px] font-pixel text-green-400 font-bold">RESET (1.0x)</button>
+                    <button id="btn-dj-plus1" class="winamp-outset py-2 text-[10px] font-pixel text-slate-200 font-bold active:text-amber-400">+1%</button>
+                    <button id="btn-dj-plus10" class="winamp-outset py-2 text-[10px] font-pixel text-slate-200 font-bold active:text-amber-400">+10%</button>
+                </div>
+
+                <!-- Key Lock / Pitch Preserve Row -->
+                <div class="flex items-center justify-between pt-1 border-t border-[#222]">
+                    <span class="font-pixel text-[10px] text-slate-300">TONHÖHE HALTEN (KEY-LOCK):</span>
+                    <button id="btn-pitch-lock" class="winamp-outset winamp-btn-active px-3 py-1 text-[10px] font-pixel text-green-400 font-bold flex items-center gap-1.5">
+                        <span id="pitch-lock-led" class="w-2 h-2 rounded-full bg-green-400 inline-block"></span>
+                        <span id="pitch-lock-text">AKTIV (TIME-STRETCH)</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===================================================== -->
+        <!-- 4. TOBAMP PLAYLIST EDITOR & WEBRADIO MODULE (PL)      -->
+        <!-- ===================================================== -->
+        <div id="playlist-window" class="winamp-window rounded-none p-1.5 flex flex-col space-y-2">
+            <div class="winamp-titlebar px-2 py-1 flex items-center justify-between text-xs">
+                <span>TOBAMP PLAYLIST EDITOR</span>
+                <button id="btn-close-playlist" class="px-1.5 text-[10px] bg-[#2b2b2f] text-slate-200 border border-slate-400">X</button>
+            </div>
+
+            <!-- Webradio Stream Panel with 4 Freely Configurable Slots -->
+            <div id="webradio-drawer" class="winamp-inset p-2 flex flex-col space-y-1.5">
+                <div class="flex justify-between items-center">
+                    <span class="font-pixel text-[10px] text-amber-400 font-bold uppercase">4 Webradio Speicherplätze (Antippen = URL belegen)</span>
+                    <span class="font-pixel text-[9px] led-text">FREI BELEGBAR</span>
+                </div>
+                <!-- 4 Configurable Radio Preset Slots -->
+                <div id="radio-slots-container" class="grid grid-cols-2 gap-1.5 pt-0.5">
+                    <!-- Rendered dynamically via JS -->
+                </div>
+                <!-- 2 Buttons to Save & Open the 4 Webradio Stations as a File -->
+                <div class="grid grid-cols-2 gap-1.5 pt-1 border-t border-[#1e1e24]">
+                    <button id="btn-export-radio" type="button" class="winamp-outset py-1.5 px-2 font-pixel text-[9px] text-green-400 font-bold flex items-center justify-center gap-1 active:text-amber-400" title="4 Webradio-Sender in Datei speichern">
+                        <i class="fa-solid fa-floppy-disk"></i> SENDER SPEICHERN
+                    </button>
+                    <label class="winamp-outset py-1.5 px-2 font-pixel text-[9px] text-amber-400 font-bold flex items-center justify-center gap-1 cursor-pointer active:text-green-400" title="4 Webradio-Sender aus Datei öffnen">
+                        <i class="fa-solid fa-folder-open"></i> SENDER ÖFFNEN
+                        <input type="file" id="radio-file-input" accept=".json,.m3u,.pls,.txt" class="hidden">
+                    </label>
+                </div>
+            </div>
+
+            <!-- Classic Black & Green Track List -->
+            <div class="winamp-inset p-2 h-44 overflow-y-auto flex flex-col space-y-0.5">
+                <div id="empty-playlist" class="text-center py-8 text-green-700 font-pixel text-[11px]">
+                    -- PLAYLIST LEER --<br>Tippe unten auf "+ MP3" oder "+ ORDNER"<br>oder wähle oben einen Webradio-Stream.
+                </div>
+                <ul id="playlist-ul" class="space-y-0.5"></ul>
+            </div>
+
+            <!-- Bottom Playlist Action Bar (+ MP3, + ORDNER, + URL, REM, M3U/PLS Save & Load) -->
+            <div class="flex flex-col space-y-1.5 pt-0.5">
+                <div class="flex justify-between items-center">
+                    <div class="flex flex-wrap gap-1">
+                        <label class="winamp-outset px-2 py-1.5 font-pixel text-[10px] text-green-400 font-bold cursor-pointer" title="Einzelne oder mehrere MP3-Dateien auswählen">
+                            + MP3
+                            <input type="file" id="pl-mp3-input" accept="audio/mp3,audio/*" multiple class="hidden">
+                        </label>
+                        <label class="winamp-outset px-2 py-1.5 font-pixel text-[10px] text-green-300 font-bold cursor-pointer" title="Ganzen Ordner mit MP3-Dateien einfügen">
+                            <i class="fa-solid fa-folder-plus mr-0.5"></i>+ ORDNER
+                            <input type="file" id="pl-folder-input" webkitdirectory directory multiple class="hidden">
+                        </label>
+                        <button id="btn-toggle-radio-drawer" class="winamp-outset px-2 py-1.5 font-pixel text-[10px] text-amber-400 font-bold">
+                            + URL
+                        </button>
+                        <button id="btn-clear-playlist" class="winamp-outset px-2 py-1.5 font-pixel text-[10px] text-red-400 font-bold">
+                            REM
+                        </button>
+                    </div>
+                    <span id="playlist-info" class="font-pixel text-[10px] led-text bg-black px-2 py-1 border border-[#333] shrink-0">0 TITEL</span>
+                </div>
+
+                <!-- Playlist Save & Load Row (.M3U & .PLS) -->
+                <div class="grid grid-cols-3 gap-1 border-t border-[#1e1e24] pt-1">
+                    <button id="btn-save-m3u" type="button" class="winamp-outset py-1.5 px-1.5 font-pixel text-[9px] text-green-400 font-bold flex items-center justify-center gap-1 active:text-amber-400" title="Playlist als .M3U speichern">
+                        <i class="fa-solid fa-download"></i> SAVE .M3U
+                    </button>
+                    <button id="btn-save-pls" type="button" class="winamp-outset py-1.5 px-1.5 font-pixel text-[9px] text-green-400 font-bold flex items-center justify-center gap-1 active:text-amber-400" title="Playlist als .PLS speichern">
+                        <i class="fa-solid fa-download"></i> SAVE .PLS
+                    </button>
+                    <label class="winamp-outset py-1.5 px-1.5 font-pixel text-[9px] text-amber-400 font-bold flex items-center justify-center gap-1 cursor-pointer active:text-green-400" title="Playlist (.M3U oder .PLS) laden">
+                        <i class="fa-solid fa-upload"></i> LOAD M3U/PLS
+                        <input type="file" id="pl-file-load-input" accept=".m3u,.m3u8,.pls,audio/x-mpegurl,audio/x-scpls" class="hidden">
+                    </label>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ===================================================== -->
+    <!-- WEBRADIO SLOT CONFIGURATION MODAL WINDOW              -->
+    <!-- ===================================================== -->
+    <div id="radio-slot-modal" class="fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50 hidden">
+        <div class="winamp-window w-full max-w-[360px] p-1.5 flex flex-col space-y-2">
+            <div class="winamp-titlebar px-2 py-1 flex items-center justify-between text-xs">
+                <div class="flex items-center space-x-1.5">
+                    <i class="fa-solid fa-radio text-amber-400 text-[10px]"></i>
+                    <span id="modal-slot-title">WEBRADIO SPEICHERPLATZ #1</span>
+                </div>
+                <button id="btn-close-slot-modal" class="px-1.5 text-[10px] bg-[#2b2b2f] text-slate-200 border border-slate-400">X</button>
+            </div>
+
+            <div class="winamp-inset p-3 flex flex-col space-y-2.5">
+                <div class="flex flex-col space-y-1">
+                    <label for="slot-name-input" class="font-pixel text-[10px] text-amber-400 font-bold uppercase">Sendername / Bezeichnung (Optional):</label>
+                    <input type="text" id="slot-name-input" placeholder="z.B. Mein Webradio" class="winamp-inset px-2 py-1.5 font-pixel text-xs led-text focus:outline-none">
+                </div>
+
+                <div class="flex flex-col space-y-1">
+                    <label for="slot-url-input" class="font-pixel text-[10px] text-amber-400 font-bold uppercase">Webradio Stream-URL (MP3 / Icecast):</label>
+                    <input type="url" id="slot-url-input" placeholder="https://ice2.somafm.com/groovesalad-128-mp3" class="winamp-inset px-2 py-1.5 font-pixel text-xs text-white focus:outline-none">
+                </div>
+
+                <div class="text-[9px] font-pixel text-slate-400 leading-tight">
+                    Gib oben die Stream-URL ein und tippe auf <span class="text-green-400 font-bold">SPEICHERN</span>. Über das <span class="text-amber-400 font-bold">▶</span> Symbol am Feld oder „ABSPIELEN“ startet der Stream sofort.
+                </div>
+
+                <div class="grid grid-cols-3 gap-1.5 pt-1">
+                    <button id="btn-save-slot" class="winamp-outset py-2 font-pixel text-[10px] text-green-400 font-bold">
+                        <i class="fa-solid fa-floppy-disk mr-1"></i>SPEICHERN
+                    </button>
+                    <button id="btn-save-play-slot" class="winamp-outset py-2 font-pixel text-[10px] text-amber-400 font-bold">
+                        <i class="fa-solid fa-play mr-1"></i>ABSPIELEN
+                    </button>
+                    <button id="btn-cancel-slot" class="winamp-outset py-2 font-pixel text-[10px] text-red-400 font-bold">
+                        ABBRECHEN
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Toast (No alert() used) -->
+    <div id="toast-notification" class="fixed bottom-4 left-1/2 -translate-x-1/2 bg-[#111115] border-2 border-green-500 text-green-400 px-4 py-2 font-pixel text-xs shadow-2xl opacity-0 pointer-events-none transition-opacity duration-300 z-50">
+        Statusmeldung
+    </div>
+
+    <!-- JavaScript Audio Engine & Winamp 4-Module Controller -->
+    <script>
+        // Application State
+        let playlist = [];
+        let currentIndex = -1;
+        let isPlaying = false;
+        let isShuffle = false;
+        let isRepeat = false;
+        let isLiveStream = false;
+        let activeRadioSlot = -1;
+        let editingSlotIndex = 0;
+        let eqEnabled = true;
+        let currentSpeed = 1.00;
+        let preservesPitchState = true;
+
+        // Default 4 Webradio Slots (persisted in localStorage)
+        const DEFAULT_RADIO_SLOTS = [
+            { name: "SomaFM Groove Salad", url: "https://ice2.somafm.com/groovesalad-128-mp3" },
+            { name: "SomaFM Secret Agent", url: "https://ice4.somafm.com/secretagent-128-mp3" },
+            { name: "Nightride Synthwave", url: "https://stream.nightride.fm/nightride.mp3" },
+            { name: "SomaFM Defcon Radio", url: "https://ice2.somafm.com/defcon-128-mp3" }
+        ];
+        let radioSlots = [];
+
+        function loadRadioSlotsFromStorage() {
+            try {
+                const saved = localStorage.getItem('tobamp_s24_radio_slots') || localStorage.getItem('winamp_s24_radio_slots');
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    if (Array.isArray(parsed) && parsed.length === 4) {
+                        radioSlots = parsed;
+                        return;
+                    }
+                }
+            } catch (e) {
+                console.warn("LocalStorage unavailable, using default slots.");
+            }
+            radioSlots = JSON.parse(JSON.stringify(DEFAULT_RADIO_SLOTS));
+        }
+
+        function saveRadioSlotsToStorage() {
+            try {
+                localStorage.setItem('tobamp_s24_radio_slots', JSON.stringify(radioSlots));
+            } catch (e) {
+                console.warn("Could not save radio slots to localStorage.");
+            }
+        }
+
+        // Web Audio API Nodes
+        let audioCtx = null;
+        let audioElement = new Audio();
+        let sourceNode = null;
+        let analyserNode = null;
+        let preampNode = null;
+        let gainNode = null;
+        let stereoPannerNode = null;
+        let eqFilters = [];
+        let corsBlockedFallback = false;
+
+        const EQ_FREQS = [60, 170, 310, 600, 1000, 3000, 6000, 12000, 14000, 16000];
+        const EQ_PRESETS = {
+            flat:   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            rock:   [5, 4, 2, -2, -1, 2, 4, 6, 6, 6],
+            techno: [6, 5, 1, -2, -1, 1, 4, 6, 6, 5],
+            bass:   [9, 7, 5, 2, 0, 0, 0, 0, 0, 0]
+        };
+
+        // DOM Elements
+        const playBtn = document.getElementById('btn-play');
+        const pauseBtn = document.getElementById('btn-pause');
+        const stopBtn = document.getElementById('btn-stop');
+        const prevBtn = document.getElementById('btn-prev');
+        const nextBtn = document.getElementById('btn-next');
+        const shuffleBtn = document.getElementById('btn-shuffle');
+        const repeatBtn = document.getElementById('btn-repeat');
+
+        const volumeSlider = document.getElementById('volume-slider');
+        const balanceSlider = document.getElementById('balance-slider');
+        const seekSlider = document.getElementById('seek-slider');
+        const volReadout = document.getElementById('vol-readout');
+        const balReadout = document.getElementById('bal-readout');
+
+        const timeMin = document.getElementById('time-min');
+        const timeSec = document.getElementById('time-sec');
+        const statusLight = document.getElementById('status-light');
+        const statusText = document.getElementById('status-text');
+        const marqueeText = document.getElementById('marquee-text');
+        const sourceBadge = document.getElementById('source-badge');
+        const miniSpeedReadout = document.getElementById('mini-speed-readout');
+
+        // DJ Module Elements
+        const djTempoSlider = document.getElementById('dj-tempo-slider');
+        const djSpeedDisplay = document.getElementById('dj-speed-display');
+        const djModeStatus = document.getElementById('dj-mode-status');
+        const btnPitchLock = document.getElementById('btn-pitch-lock');
+        const pitchLockLed = document.getElementById('pitch-lock-led');
+        const pitchLockText = document.getElementById('pitch-lock-text');
+
+        // Playlist Elements
+        const mp3FileInput = document.getElementById('mp3-file-input');
+        const plMp3Input = document.getElementById('pl-mp3-input');
+        const plFolderInput = document.getElementById('pl-folder-input');
+        const playlistUl = document.getElementById('playlist-ul');
+        const emptyPlaylist = document.getElementById('empty-playlist');
+        const playlistInfo = document.getElementById('playlist-info');
+        const clearPlaylistBtn = document.getElementById('btn-clear-playlist');
+        const webradioDrawer = document.getElementById('webradio-drawer');
+        const radioSlotsContainer = document.getElementById('radio-slots-container');
+        const toastNotification = document.getElementById('toast-notification');
+
+        // Webradio Slot Modal Elements
+        const radioSlotModal = document.getElementById('radio-slot-modal');
+        const modalSlotTitle = document.getElementById('modal-slot-title');
+        const slotNameInput = document.getElementById('slot-name-input');
+        const slotUrlInput = document.getElementById('slot-url-input');
+        const btnSaveSlot = document.getElementById('btn-save-slot');
+        const btnSavePlaySlot = document.getElementById('btn-save-play-slot');
+        const btnCancelSlot = document.getElementById('btn-cancel-slot');
+        const btnCloseSlotModal = document.getElementById('btn-close-slot-modal');
+
+        // Module Window Toggles
+        const eqWindow = document.getElementById('equalizer-window');
+        const djWindow = document.getElementById('dj-window');
+        const playlistWindow = document.getElementById('playlist-window');
+        const btnToggleEq = document.getElementById('btn-toggle-eq');
+        const btnToggleDj = document.getElementById('btn-toggle-dj');
+        const btnTogglePl = document.getElementById('btn-toggle-playlist');
+
+        function toggleModuleWindow(winEl, btnEl, ledId) {
+            const isHidden = winEl.classList.toggle('hidden');
+            const ledEl = document.getElementById(ledId);
+            btnEl.classList.toggle('winamp-btn-active', !isHidden);
+            btnEl.classList.toggle('text-green-400', !isHidden);
+            btnEl.classList.toggle('text-slate-400', isHidden);
+            if (ledEl) {
+                ledEl.className = isHidden
+                    ? 'w-1.5 h-1.5 rounded-full bg-slate-600 mb-0.5'
+                    : 'w-1.5 h-1.5 rounded-full bg-green-400 mb-0.5 shadow-[0_0_4px_#00ff00]';
+            }
+        }
+
+        btnToggleEq.addEventListener('click', () => toggleModuleWindow(eqWindow, btnToggleEq, 'led-eq'));
+        document.getElementById('btn-close-eq').addEventListener('click', () => toggleModuleWindow(eqWindow, btnToggleEq, 'led-eq'));
+
+        btnToggleDj.addEventListener('click', () => toggleModuleWindow(djWindow, btnToggleDj, 'led-dj'));
+        document.getElementById('btn-close-dj').addEventListener('click', () => toggleModuleWindow(djWindow, btnToggleDj, 'led-dj'));
+
+        btnTogglePl.addEventListener('click', () => toggleModuleWindow(playlistWindow, btnTogglePl, 'led-pl'));
+        document.getElementById('btn-close-playlist').addEventListener('click', () => toggleModuleWindow(playlistWindow, btnTogglePl, 'led-pl'));
+
+        document.getElementById('btn-toggle-radio-drawer').addEventListener('click', () => {
+            webradioDrawer.classList.toggle('hidden');
+        });
+
+        function showToast(msg) {
+            toastNotification.textContent = msg;
+            toastNotification.style.opacity = '1';
+            setTimeout(() => {
+                toastNotification.style.opacity = '0';
+            }, 2600);
+        }
+
+        // Initialize Web Audio API Graph
+        function initAudioContext() {
+            if (audioCtx) return;
+            const AudioCtx = window.AudioContext || window.webkitAudioContext;
+            audioCtx = new AudioCtx();
+
+            audioElement.crossOrigin = "anonymous";
+            sourceNode = audioCtx.createMediaElementSource(audioElement);
+            analyserNode = audioCtx.createAnalyser();
+            analyserNode.fftSize = 64;
+
+            preampNode = audioCtx.createGain();
+            preampNode.gain.value = 1.0;
+
+            gainNode = audioCtx.createGain();
+            gainNode.gain.value = parseFloat(volumeSlider.value);
+
+            if (audioCtx.createStereoPanner) {
+                stereoPannerNode = audioCtx.createStereoPanner();
+                stereoPannerNode.pan.value = parseFloat(balanceSlider.value);
+            }
+
+            sourceNode.connect(preampNode);
+            let lastNode = preampNode;
+
+            eqFilters = EQ_FREQS.map(freq => {
+                let filter = audioCtx.createBiquadFilter();
+                filter.type = 'peaking';
+                filter.frequency.value = freq;
+                filter.Q.value = 1.4;
+                filter.gain.value = 0;
+                lastNode.connect(filter);
+                lastNode = filter;
+                return filter;
+            });
+
+            if (stereoPannerNode) {
+                lastNode.connect(stereoPannerNode);
+                stereoPannerNode.connect(gainNode);
+            } else {
+                lastNode.connect(gainNode);
+            }
+
+            gainNode.connect(analyserNode);
+            analyserNode.connect(audioCtx.destination);
+        }
+
+        // Spectrum Visualizer with Classic Winamp Peak Dots
+        const canvas = document.getElementById('visualizer-canvas');
+        const canvasCtx = canvas.getContext('2d');
+        let peaks = new Array(32).fill(0);
+
+        function resizeCanvas() {
+            canvas.width = canvas.parentElement.clientWidth || 240;
+            canvas.height = canvas.parentElement.clientHeight || 56;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        function drawVisualizer() {
+            requestAnimationFrame(drawVisualizer);
+            canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Subtle dark grid background
+            canvasCtx.fillStyle = '#070b07';
+            canvasCtx.fillRect(0, 0, canvas.width, canvas.height);
+
+            const numBars = 24;
+            const barWidth = Math.floor((canvas.width - numBars) / numBars);
+
+            if (!isPlaying) {
+                canvasCtx.fillStyle = '#003300';
+                for (let i = 0; i < numBars; i++) {
+                    canvasCtx.fillRect(i * (barWidth + 1), canvas.height - 2, barWidth, 2);
+                }
+                return;
+            }
+
+            let dataArray = new Uint8Array(32);
+            if (analyserNode && !corsBlockedFallback) {
+                analyserNode.getByteFrequencyData(dataArray);
+            }
+
+            // Check if stream has silent analyser due to CORS fallback
+            let sum = 0;
+            for (let i = 0; i < numBars; i++) sum += dataArray[i];
+
+            for (let i = 0; i < numBars; i++) {
+                let val = dataArray[i];
+                if (sum === 0 && isPlaying) {
+                    // Simulated spectrum animation if WebRadio stream blocks CORS analyser
+                    val = 60 + Math.sin(Date.now() * 0.012 * currentSpeed + i * 0.7) * 55 + Math.random() * 45;
+                }
+                const barHeight = Math.min(canvas.height - 3, (val / 255) * (canvas.height - 2));
+                const x = i * (barWidth + 1);
+
+                // Classic Winamp Green -> Yellow -> Red bar gradient
+                let grad = canvasCtx.createLinearGradient(0, canvas.height, 0, 0);
+                grad.addColorStop(0, '#00e600');
+                grad.addColorStop(0.65, '#ffb000');
+                grad.addColorStop(1, '#ff1a1a');
+
+                canvasCtx.fillStyle = grad;
+                canvasCtx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
+
+                // Peak falling dots
+                if (barHeight >= peaks[i]) {
+                    peaks[i] = barHeight;
+                } else {
+                    peaks[i] = Math.max(0, peaks[i] - 0.45);
+                }
+                canvasCtx.fillStyle = '#d0ffd0';
+                canvasCtx.fillRect(x, canvas.height - peaks[i] - 2, barWidth, 1.5);
+            }
+        }
+        drawVisualizer();
+
+        // =====================================================
+        // DJ MODULE: SPEED (PLAYBACK RATE) & PITCH LOCK LOGIC
+        // =====================================================
+        function applyDjPlaybackSpeed(speedVal) {
+            currentSpeed = Math.min(2.00, Math.max(0.50, parseFloat(speedVal)));
+            djTempoSlider.value = currentSpeed.toFixed(2);
+            const pct = Math.round(currentSpeed * 100);
+            djSpeedDisplay.textContent = `${pct}% (${currentSpeed.toFixed(2)}x)`;
+            miniSpeedReadout.textContent = `${currentSpeed.toFixed(2)}x`;
+
+            // Apply pitch preservation setting across browsers
+            if ('preservesPitch' in audioElement) {
+                audioElement.preservesPitch = preservesPitchState;
+            } else if ('mozPreservesPitch' in audioElement) {
+                audioElement.mozPreservesPitch = preservesPitchState;
+            } else if ('webkitPreservesPitch' in audioElement) {
+                audioElement.webkitPreservesPitch = preservesPitchState;
+            }
+
+            if (!isLiveStream) {
+                audioElement.playbackRate = currentSpeed;
+                audioElement.defaultPlaybackRate = currentSpeed;
+            }
+        }
+
+        function updateDjDeckModeUI() {
+            if (isLiveStream) {
+                djModeStatus.textContent = "WEBRADIO GESPERRT";
+                djModeStatus.className = "font-pixel text-xs font-bold red-led-text";
+                djTempoSlider.disabled = true;
+                djTempoSlider.classList.add('opacity-40');
+                miniSpeedReadout.textContent = "LIVE";
+            } else {
+                djModeStatus.textContent = "MP3 BEREIT (AKTIV)";
+                djModeStatus.className = "font-pixel text-xs font-bold led-text";
+                djTempoSlider.disabled = false;
+                djTempoSlider.classList.remove('opacity-40');
+                applyDjPlaybackSpeed(currentSpeed);
+            }
+        }
+
+        djTempoSlider.addEventListener('input', (e) => {
+            if (isLiveStream) {
+                showToast("DJ-Tempo ist nur für MP3-Dateien verfügbar");
+                return;
+            }
+            applyDjPlaybackSpeed(e.target.value);
+        });
+
+        document.getElementById('btn-dj-minus10').addEventListener('click', () => {
+            if (!isLiveStream) applyDjPlaybackSpeed(currentSpeed - 0.10);
+        });
+        document.getElementById('btn-dj-minus1').addEventListener('click', () => {
+            if (!isLiveStream) applyDjPlaybackSpeed(currentSpeed - 0.01);
+        });
+        document.getElementById('btn-dj-reset').addEventListener('click', () => {
+            applyDjPlaybackSpeed(1.00);
+            showToast("DJ Tempo: 100% (1.00x)");
+        });
+        document.getElementById('btn-dj-plus1').addEventListener('click', () => {
+            if (!isLiveStream) applyDjPlaybackSpeed(currentSpeed + 0.01);
+        });
+        document.getElementById('btn-dj-plus10').addEventListener('click', () => {
+            if (!isLiveStream) applyDjPlaybackSpeed(currentSpeed + 0.10);
+        });
+
+        btnPitchLock.addEventListener('click', () => {
+            preservesPitchState = !preservesPitchState;
+            btnPitchLock.classList.toggle('winamp-btn-active', preservesPitchState);
+            btnPitchLock.classList.toggle('text-green-400', preservesPitchState);
+            btnPitchLock.classList.toggle('text-amber-400', !preservesPitchState);
+            pitchLockLed.className = preservesPitchState
+                ? "w-2 h-2 rounded-full bg-green-400 inline-block"
+                : "w-2 h-2 rounded-full bg-amber-400 inline-block";
+            pitchLockText.textContent = preservesPitchState ? "AKTIV (TIME-STRETCH)" : "AUS (VINYL PITCH)";
+            applyDjPlaybackSpeed(currentSpeed);
+            showToast(preservesPitchState ? "Key-Lock: Tonhöhe bleibt gleich" : "Vinyl-Modus: Tonhöhe ändert sich mit Tempo");
+        });
+
+        // =====================================================
+        // DYNAMIC VINYL TURNTABLE & INTERACTIVE SCRATCH ENGINE
+        // =====================================================
+        const vinylTouchArea = document.getElementById('vinyl-turntable-touch');
+        const vinylDiscSvg = document.getElementById('vinyl-disc-svg');
+        const vinylStatusText = document.getElementById('vinyl-status-text');
+        const vinylRpmText = document.getElementById('vinyl-rpm-text');
+
+        let vinylAngle = 0;
+        let isScratching = false;
+        let wasPlayingBeforeScratch = false;
+        let lastPointerAngle = 0;
+        let lastScratchMoveTime = 0;
+        let lastScratchNoiseTime = 0;
+        let decodedTrackBuffer = null;
+        let decodedTrackUrl = null;
+        let lastGrainSpawnTime = 0;
+
+        // Decode active local MP3 file in background for ultra-responsive forward & reverse scratching
+        async function decodeCurrentTrackForScratch(trackUrl) {
+            if (!trackUrl || isLiveStream || trackUrl === decodedTrackUrl) return;
+            decodedTrackUrl = trackUrl;
+            decodedTrackBuffer = null;
+            try {
+                initAudioContext();
+                const response = await fetch(trackUrl);
+                const arrayBuf = await response.arrayBuffer();
+                decodedTrackBuffer = await audioCtx.decodeAudioData(arrayBuf);
+            } catch (e) {
+                console.warn("Scratch buffer decode fallback active:", e);
+            }
+        }
+
+        // Play short vinyl audio grain (supports forward & reverse scratching!)
+        function triggerVinylScratchSound(angularVelocityDegPerMs, currentMediaTime) {
+            if (!audioCtx) return;
+            const now = performance.now();
+            if (now - lastGrainSpawnTime < 28) return;
+            lastGrainSpawnTime = now;
+
+            const speedMagnitude = Math.min(3.2, Math.max(0.25, Math.abs(angularVelocityDegPerMs) * 1.8));
+            const isReverse = angularVelocityDegPerMs < 0;
+
+            // 1. If decoded MP3 buffer is ready, play real vocal/music scratch grain
+            if (decodedTrackBuffer) {
+                try {
+                    const grainDuration = 0.085;
+                    const sampleRate = decodedTrackBuffer.sampleRate;
+                    const frameCount = Math.max(256, Math.floor(grainDuration * sampleRate));
+                    const grainBuffer = audioCtx.createBuffer(
+                        decodedTrackBuffer.numberOfChannels,
+                        frameCount,
+                        sampleRate
+                    );
+
+                    const centerFrame = Math.floor(
+                        Math.min(decodedTrackBuffer.duration - 0.1, Math.max(0.05, currentMediaTime)) * sampleRate
+                    );
+
+                    for (let ch = 0; ch < decodedTrackBuffer.numberOfChannels; ch++) {
+                        const srcData = decodedTrackBuffer.getChannelData(ch);
+                        const dstData = grainBuffer.getChannelData(ch);
+                        for (let i = 0; i < frameCount; i++) {
+                            const srcIndex = isReverse ? (centerFrame - i) : (centerFrame + i);
+                            // Smooth Hann window envelope so grains blend like a real vinyl record
+                            const windowEnv = 0.5 * (1 - Math.cos((2 * Math.PI * i) / (frameCount - 1)));
+                            dstData[i] = (srcIndex >= 0 && srcIndex < srcData.length)
+                                ? srcData[srcIndex] * windowEnv
+                                : 0;
+                        }
+                    }
+
+                    const grainSource = audioCtx.createBufferSource();
+                    grainSource.buffer = grainBuffer;
+                    grainSource.playbackRate.value = speedMagnitude;
+
+                    const scratchGain = audioCtx.createGain();
+                    scratchGain.gain.value = Math.min(1.15, parseFloat(volumeSlider.value) * 1.1);
+
+                    grainSource.connect(scratchGain);
+                    scratchGain.connect(analyserNode || audioCtx.destination);
+                    grainSource.start();
+                    return;
+                } catch (err) {
+                    // Fallback to synth vinyl friction below
+                }
+            }
+
+            // 2. Classic Vinyl Friction Scratch Synthesizer (if buffer still decoding)
+            if (now - lastScratchNoiseTime < 35) return;
+            lastScratchNoiseTime = now;
+
+            const dur = 0.06;
+            const bufferSize = Math.floor(audioCtx.sampleRate * dur);
+            const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+            const output = noiseBuffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) {
+                const env = Math.sin((i / bufferSize) * Math.PI);
+                output[i] = (Math.random() * 2 - 1) * env * 0.6;
+            }
+
+            const whiteNoise = audioCtx.createBufferSource();
+            whiteNoise.buffer = noiseBuffer;
+
+            const bandpass = audioCtx.createBiquadFilter();
+            bandpass.type = 'bandpass';
+            bandpass.frequency.value = Math.min(3400, Math.max(320, 480 * speedMagnitude));
+            bandpass.Q.value = 3.5;
+
+            const vGain = audioCtx.createGain();
+            vGain.gain.value = parseFloat(volumeSlider.value) * 0.45;
+
+            whiteNoise.connect(bandpass);
+            bandpass.connect(vGain);
+            vGain.connect(analyserNode || audioCtx.destination);
+            whiteNoise.start();
+        }
+
+        function getAngleFromCenter(clientX, clientY) {
+            const rect = vinylTouchArea.getBoundingClientRect();
+            const cx = rect.left + rect.width / 2;
+            const cy = rect.top + rect.height / 2;
+            return Math.atan2(clientY - cy, clientX - cx) * (180 / Math.PI);
+        }
+
+        function startVinylScratch(clientX, clientY) {
+            if (isLiveStream) {
+                showToast("Scratchen ist nur bei lokalen MP3-Dateien möglich");
+                return;
+            }
+            if (playlist.length === 0 || currentIndex === -1) {
+                showToast("Bitte zuerst eine MP3-Datei laden");
+                return;
+            }
+            initAudioContext();
+            if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+
+            isScratching = true;
+            wasPlayingBeforeScratch = isPlaying;
+            audioElement.pause();
+
+            lastPointerAngle = getAngleFromCenter(clientX, clientY);
+            lastScratchMoveTime = performance.now();
+
+            vinylStatusText.textContent = "SCRATCHING!";
+            vinylStatusText.className = "font-pixel text-[10px] amber-text font-bold block animate-pulse";
+        }
+
+        function moveVinylScratch(clientX, clientY) {
+            if (!isScratching) return;
+
+            const currentPointerAngle = getAngleFromCenter(clientX, clientY);
+            let deltaDeg = currentPointerAngle - lastPointerAngle;
+
+            // Handle wrap-around at -180 / +180 degrees smoothly
+            if (deltaDeg > 180) deltaDeg -= 360;
+            if (deltaDeg < -180) deltaDeg += 360;
+
+            const now = performance.now();
+            const dt = Math.max(4, now - lastScratchMoveTime);
+            const angularVelocity = deltaDeg / dt; // deg per ms
+
+            vinylAngle = (vinylAngle + deltaDeg) % 360;
+            vinylDiscSvg.style.transform = `rotate(${vinylAngle}deg)`;
+
+            // 1 full revolution (360 deg) = 1.8 seconds of audio scrubbing
+            const timeShiftSeconds = (deltaDeg / 360) * 1.8;
+            if (!isNaN(audioElement.duration) && audioElement.duration > 0) {
+                const nextTime = Math.min(
+                    audioElement.duration - 0.05,
+                    Math.max(0, (audioElement.currentTime || 0) + timeShiftSeconds)
+                );
+                audioElement.currentTime = nextTime;
+            }
+
+            if (Math.abs(deltaDeg) > 0.35) {
+                triggerVinylScratchSound(angularVelocity, audioElement.currentTime || 0);
+            }
+
+            const directionLabel = deltaDeg >= 0 ? "FWD" : "REV";
+            vinylRpmText.textContent = `${directionLabel} ${Math.round((Math.abs(angularVelocity) * 1000) / 6)} RPM`;
+
+            lastPointerAngle = currentPointerAngle;
+            lastScratchMoveTime = now;
+        }
+
+        function endVinylScratch() {
+            if (!isScratching) return;
+            isScratching = false;
+
+            if (wasPlayingBeforeScratch) {
+                audioElement.play().then(() => {
+                    isPlaying = true;
+                    applyDjPlaybackSpeed(currentSpeed);
+                }).catch(() => {});
+            }
+
+            vinylStatusText.textContent = isPlaying ? "SPINNING" : "STANDBY";
+            vinylStatusText.className = "font-pixel text-[10px] led-text font-bold block";
+            vinylRpmText.textContent = `${(33.3 * currentSpeed).toFixed(1)} RPM`;
+        }
+
+        // Mouse & Touch Event Listeners for the Turntable Platter
+        vinylTouchArea.addEventListener('mousedown', (e) => {
+            e.preventDefault();
+            startVinylScratch(e.clientX, e.clientY);
+        });
+        window.addEventListener('mousemove', (e) => {
+            if (isScratching) moveVinylScratch(e.clientX, e.clientY);
+        });
+        window.addEventListener('mouseup', () => {
+            if (isScratching) endVinylScratch();
+        });
+
+        vinylTouchArea.addEventListener('touchstart', (e) => {
+            if (e.touches.length > 0) {
+                e.preventDefault();
+                startVinylScratch(e.touches[0].clientX, e.touches[0].clientY);
+            }
+        }, { passive: false });
+
+        window.addEventListener('touchmove', (e) => {
+            if (isScratching && e.touches.length > 0) {
+                e.preventDefault();
+                moveVinylScratch(e.touches[0].clientX, e.touches[0].clientY);
+            }
+        }, { passive: false });
+
+        window.addEventListener('touchend', () => {
+            if (isScratching) endVinylScratch();
+        });
+
+        // Continuous Turntable Platter Animation Loop
+        let lastAnimFrame = performance.now();
+        function animateVinylPlatter(now) {
+            requestAnimationFrame(animateVinylPlatter);
+            const dt = (now - lastAnimFrame) / 1000;
+            lastAnimFrame = now;
+
+            if (isPlaying && !isScratching) {
+                // 33.3 RPM = 200 degrees per second at 1.0x speed
+                const effectiveSpeed = isLiveStream ? 1.0 : currentSpeed;
+                vinylAngle = (vinylAngle + 200 * effectiveSpeed * dt) % 360;
+                vinylDiscSvg.style.transform = `rotate(${vinylAngle}deg)`;
+                vinylStatusText.textContent = isLiveStream ? "RADIO SPIN" : "SPINNING";
+                vinylRpmText.textContent = `${(33.3 * effectiveSpeed).toFixed(1)} RPM`;
+            } else if (!isPlaying && !isScratching) {
+                vinylStatusText.textContent = "STANDBY";
+            }
+        }
+        requestAnimationFrame(animateVinylPlatter);
+
+        // Volume & Balance Controls
+        volumeSlider.addEventListener('input', (e) => {
+            const val = parseFloat(e.target.value);
+            audioElement.volume = val;
+            if (gainNode) gainNode.gain.value = val;
+            volReadout.textContent = `${Math.round(val * 100)}%`;
+        });
+
+        balanceSlider.addEventListener('input', (e) => {
+            const val = parseFloat(e.target.value);
+            if (stereoPannerNode) stereoPannerNode.pan.value = val;
+            if (Math.abs(val) < 0.08) {
+                balReadout.textContent = "MITTE";
+            } else if (val < 0) {
+                balReadout.textContent = `L ${Math.round(Math.abs(val) * 100)}%`;
+            } else {
+                balReadout.textContent = `R ${Math.round(val * 100)}%`;
+            }
+        });
+
+        // Seek Slider & Time Display Updates
+        let isSeeking = false;
+        let showRemainingTime = false;
+
+        document.getElementById('timer-box').addEventListener('click', () => {
+            showRemainingTime = !showRemainingTime;
+            showToast(showRemainingTime ? "Zeitanzeige: Verbleibend" : "Zeitanzeige: Vergangen");
+        });
+
+        seekSlider.addEventListener('input', (e) => {
+            if (isLiveStream) return;
+            isSeeking = true;
+            if (!isNaN(audioElement.duration) && audioElement.duration > 0) {
+                const targetTime = (parseFloat(e.target.value) / 100) * audioElement.duration;
+                const m = Math.floor(targetTime / 60);
+                const s = Math.floor(targetTime % 60);
+                timeMin.textContent = `${m < 10 ? '0' : ''}${m}`;
+                timeSec.textContent = `${s < 10 ? '0' : ''}${s}`;
+            }
+        });
+
+        seekSlider.addEventListener('change', (e) => {
+            if (isLiveStream) {
+                seekSlider.value = 100;
+                return;
+            }
+            if (!isNaN(audioElement.duration) && audioElement.duration > 0) {
+                audioElement.currentTime = (parseFloat(e.target.value) / 100) * audioElement.duration;
+            }
+            isSeeking = false;
+        });
+
+        audioElement.addEventListener('timeupdate', () => {
+            if (isSeeking || isScratching) return;
+            const cur = audioElement.currentTime || 0;
+            const dur = audioElement.duration || 0;
+
+            if (isLiveStream || isNaN(dur) || dur === 0 || !isFinite(dur)) {
+                const m = Math.floor(cur / 60);
+                const s = Math.floor(cur % 60);
+                timeMin.textContent = `${m < 10 ? '0' : ''}${m}`;
+                timeSec.textContent = `${s < 10 ? '0' : ''}${s}`;
+                seekSlider.value = 100;
+            } else {
+                const displaySec = showRemainingTime ? Math.max(0, dur - cur) : cur;
+                const m = Math.floor(displaySec / 60);
+                const s = Math.floor(displaySec % 60);
+                timeMin.textContent = `${m < 10 ? '0' : ''}${m}`;
+                timeSec.textContent = `${s < 10 ? '0' : ''}${s}`;
+                seekSlider.value = ((cur / dur) * 100).toFixed(1);
+            }
+        });
+
+        audioElement.addEventListener('ended', () => {
+            if (isLiveStream) return;
+            if (isRepeat) {
+                audioElement.currentTime = 0;
+                audioElement.play().then(() => {
+                    isPlaying = true;
+                    applyDjPlaybackSpeed(currentSpeed);
+                }).catch(() => {});
+            } else if (playlist.length > 0) {
+                let nextIdx = isShuffle
+                    ? Math.floor(Math.random() * playlist.length)
+                    : (currentIndex + 1) % playlist.length;
+                if (!isShuffle && currentIndex === playlist.length - 1) {
+                    stopBtn.click();
+                } else {
+                    loadAndPlayIndex(nextIdx);
+                }
+            }
+        });
+
+        // Handle MP3 File & Folder Uploads (from Main Eject, Playlist + MP3, and + ORDNER)
+        function handleMp3Files(fileList) {
+            if (!fileList || !fileList.length) return;
+
+            // Filter audio/MP3 files (especially important when importing a whole folder)
+            const audioFiles = Array.from(fileList).filter(file => {
+                const name = file.name.toLowerCase();
+                return (
+                    (file.type && file.type.startsWith('audio/')) ||
+                    name.endsWith('.mp3') ||
+                    name.endsWith('.wav') ||
+                    name.endsWith('.ogg') ||
+                    name.endsWith('.m4a') ||
+                    name.endsWith('.flac') ||
+                    name.endsWith('.aac')
+                );
+            });
+
+            if (audioFiles.length === 0) {
+                showToast("Keine kompatiblen Audiodateien (MP3) gefunden");
+                return;
+            }
+
+            // Sort alphabetically by relative path or filename when loading folders
+            audioFiles.sort((a, b) => {
+                const pathA = a.webkitRelativePath || a.name;
+                const pathB = b.webkitRelativePath || b.name;
+                return pathA.localeCompare(pathB, undefined, { numeric: true });
+            });
+
+            for (let file of audioFiles) {
+                const baseTitle = file.name.replace(/\.[^/.]+$/, "");
+                const blobUrl = URL.createObjectURL(file);
+
+                // Check if an unlinked M3U/PLS entry matches this local file name
+                const existingEntry = playlist.find(t =>
+                    t.needsLocalFile &&
+                    (t.fileName === file.name || t.name.toLowerCase() === baseTitle.toLowerCase())
+                );
+
+                if (existingEntry) {
+                    existingEntry.url = blobUrl;
+                    existingEntry.isLocal = true;
+                    existingEntry.needsLocalFile = false;
+                    const tempAud = new Audio(blobUrl);
+                    tempAud.addEventListener('loadedmetadata', () => {
+                        const m = Math.floor(tempAud.duration / 60);
+                        const s = Math.floor(tempAud.duration % 60);
+                        existingEntry.duration = `${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
+                        renderPlaylist();
+                    });
+                    continue;
+                }
+
+                const track = {
+                    name: baseTitle,
+                    fileName: file.name,
+                    url: blobUrl,
+                    duration: "00:00",
+                    durationSec: -1,
+                    isLocal: true
+                };
+
+                const tempAud = new Audio(track.url);
+                tempAud.addEventListener('loadedmetadata', () => {
+                    track.durationSec = Math.round(tempAud.duration || 0);
+                    const m = Math.floor(tempAud.duration / 60);
+                    const s = Math.floor(tempAud.duration % 60);
+                    track.duration = `${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
+                    renderPlaylist();
+                });
+
+                playlist.push(track);
+            }
+
+            renderPlaylist();
+            showToast(`${audioFiles.length} MP3-Datei(en) zur Playlist hinzugefügt`);
+            if (currentIndex === -1 && playlist.length > 0) {
+                loadAndPlayIndex(0);
+            }
+        }
+
+        mp3FileInput.addEventListener('change', (e) => {
+            handleMp3Files(e.target.files);
+            mp3FileInput.value = '';
+        });
+        plMp3Input.addEventListener('change', (e) => {
+            handleMp3Files(e.target.files);
+            plMp3Input.value = '';
+        });
+        plFolderInput.addEventListener('change', (e) => {
+            handleMp3Files(e.target.files);
+            plFolderInput.value = '';
+        });
+
+        function renderPlaylist() {
+            if (playlist.length === 0) {
+                emptyPlaylist.classList.remove('hidden');
+                playlistUl.innerHTML = '';
+                playlistInfo.textContent = "0 TITEL";
+                return;
+            }
+            emptyPlaylist.classList.add('hidden');
+            playlistUl.innerHTML = '';
+
+            playlist.forEach((tr, idx) => {
+                const li = document.createElement('li');
+                const active = (!isLiveStream && idx === currentIndex);
+                li.className = `flex justify-between items-center px-2 py-1.5 font-pixel text-[11px] cursor-pointer border ${
+                    active ? 'bg-[#000055] text-white border-green-400 font-bold' : 'bg-[#08080a] led-text border-transparent hover:bg-[#141c14]'
+                }`;
+                const badge = tr.isStream ? '[STREAM] ' : (tr.needsLocalFile ? '[MP3 WÄHLEN] ' : '');
+                li.innerHTML = `
+                    <span class="truncate pr-2">${idx + 1}. ${badge}${tr.name}</span>
+                    <span class="shrink-0 text-amber-400">${tr.duration || '00:00'}</span>
+                `;
+                li.addEventListener('click', () => loadAndPlayIndex(idx));
+                playlistUl.appendChild(li);
+            });
+            playlistInfo.textContent = `${playlist.length} TITEL`;
+        }
+
+        clearPlaylistBtn.addEventListener('click', () => {
+            playlist = [];
+            currentIndex = -1;
+            stopBtn.click();
+            marqueeText.textContent = "*** PLAYLIST GELÖSCHT - BITTE MP3 ODER WEBRADIO WÄHLEN ***";
+            renderPlaylist();
+            showToast("Playlist geleert");
+        });
+
+        function loadTrack(idx) {
+            if (idx < 0 || idx >= playlist.length) return;
+            const tr = playlist[idx];
+
+            if (tr.needsLocalFile) {
+                showToast(`Bitte "${tr.fileName || tr.name}" über "+ MP3" auswählen`);
+                return;
+            }
+
+            if (tr.isStream || /^https?:\/\//i.test(tr.url)) {
+                currentIndex = idx;
+                streamRadio(tr.name, tr.url, -1);
+                return;
+            }
+
+            isLiveStream = false;
+            activeRadioSlot = -1;
+            corsBlockedFallback = false;
+            currentIndex = idx;
+            initAudioContext();
+            audioElement.crossOrigin = "anonymous";
+            audioElement.src = tr.url;
+            audioElement.load();
+            decodeCurrentTrackForScratch(tr.url);
+            applyDjPlaybackSpeed(currentSpeed);
+            updateDjDeckModeUI();
+            sourceBadge.textContent = "MP3 FILE";
+            marqueeText.textContent = `*** ${currentIndex + 1}. ${tr.name} (${Math.round(currentSpeed * 100)}% TEMPO) ***`;
+            renderPlaylist();
+            renderRadioSlots();
+        }
+
+        function loadAndPlayIndex(idx) {
+            if (idx < 0 || idx >= playlist.length) return;
+            const tr = playlist[idx];
+            if (tr.needsLocalFile) {
+                showToast(`Lokale Datei "${tr.fileName || tr.name}" bitte per "+ MP3" freigeben`);
+                plMp3Input.click();
+                return;
+            }
+            if (tr.isStream || /^https?:\/\//i.test(tr.url)) {
+                currentIndex = idx;
+                streamRadio(tr.name, tr.url, -1);
+                return;
+            }
+            loadTrack(idx);
+            if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+            audioElement.play().then(() => {
+                isPlaying = true;
+                applyDjPlaybackSpeed(currentSpeed);
+                statusLight.className = "w-2.5 h-2.5 rounded-full bg-green-500 shadow-[0_0_8px_#00ff00] inline-block animate-pulse";
+                statusText.textContent = "PLAY";
+                statusText.className = "font-pixel text-[11px] text-green-500 font-bold uppercase";
+            }).catch(err => console.error(err));
+        }
+
+        playBtn.addEventListener('click', () => {
+            if (isLiveStream && audioElement.src) {
+                audioElement.play();
+                isPlaying = true;
+                return;
+            }
+            if (playlist.length === 0) {
+                showToast("Bitte zuerst MP3 laden oder Webradio wählen");
+                return;
+            }
+            initAudioContext();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            if (currentIndex === -1) loadTrack(0);
+            audioElement.play().then(() => {
+                isPlaying = true;
+                applyDjPlaybackSpeed(currentSpeed);
+                statusLight.className = "w-2.5 h-2.5 rounded-full bg-green-500 shadow-[0_0_8px_#00ff00] inline-block animate-pulse";
+                statusText.textContent = "PLAY";
+            }).catch(err => console.error(err));
+        });
+
+        pauseBtn.addEventListener('click', () => {
+            if (isPlaying) {
+                audioElement.pause();
+                isPlaying = false;
+                statusLight.className = "w-2.5 h-2.5 rounded-full bg-amber-500 inline-block";
+                statusText.textContent = "PAUSE";
+                statusText.className = "font-pixel text-[11px] text-amber-500 font-bold uppercase";
+            } else if (audioElement.src) {
+                audioElement.play();
+                isPlaying = true;
+                if (!isLiveStream) applyDjPlaybackSpeed(currentSpeed);
+                statusLight.className = "w-2.5 h-2.5 rounded-full bg-green-500 shadow-[0_0_8px_#00ff00] inline-block animate-pulse";
+                statusText.textContent = isLiveStream ? "LIVE" : "PLAY";
+                statusText.className = "font-pixel text-[11px] text-green-500 font-bold uppercase";
+            }
+        });
+
+        stopBtn.addEventListener('click', () => {
+            audioElement.pause();
+            if (!isLiveStream) audioElement.currentTime = 0;
+            isPlaying = false;
+            statusLight.className = "w-2.5 h-2.5 rounded-full bg-[#003300] inline-block";
+            statusText.textContent = "STOP";
+            statusText.className = "font-pixel text-[11px] text-green-500 font-bold uppercase";
+            timeMin.textContent = "00";
+            timeSec.textContent = "00";
+            seekSlider.value = 0;
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (playlist.length === 0) return;
+            let n = isShuffle ? Math.floor(Math.random() * playlist.length) : (currentIndex + 1) % playlist.length;
+            loadAndPlayIndex(n);
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if (playlist.length === 0) return;
+            let p = (currentIndex - 1 + playlist.length) % playlist.length;
+            loadAndPlayIndex(p);
+        });
+
+        shuffleBtn.addEventListener('click', () => {
+            isShuffle = !isShuffle;
+            shuffleBtn.classList.toggle('winamp-btn-active', isShuffle);
+            shuffleBtn.classList.toggle('text-green-400', isShuffle);
+            showToast(`Shuffle: ${isShuffle ? 'EIN' : 'AUS'}`);
+        });
+
+        repeatBtn.addEventListener('click', () => {
+            isRepeat = !isRepeat;
+            repeatBtn.classList.toggle('winamp-btn-active', isRepeat);
+            repeatBtn.classList.toggle('text-green-400', isRepeat);
+            showToast(`Repeat: ${isRepeat ? 'EIN' : 'AUS'}`);
+        });
+
+        // =====================================================
+        // 4 CONFIGURABLE WEBRADIO SLOTS & MODAL WINDOW LOGIC
+        // =====================================================
+        function renderRadioSlots() {
+            radioSlotsContainer.innerHTML = '';
+            radioSlots.forEach((slot, idx) => {
+                const isSlotActive = isLiveStream && activeRadioSlot === idx;
+                const hasUrl = Boolean(slot.url && slot.url.trim().length > 0);
+                const displayTitle = slot.name && slot.name.trim()
+                    ? slot.name.trim()
+                    : (hasUrl ? slot.url.replace(/^https?:\/\//, '') : `Platz ${idx + 1} (Leer)`);
+
+                const wrapper = document.createElement('div');
+                wrapper.className = `winamp-outset flex items-stretch justify-between overflow-hidden ${
+                    isSlotActive ? 'border border-amber-400 bg-[#1f291f]' : ''
+                }`;
+
+                // Main Slot Field: Clicking opens the URL configuration modal window
+                const fieldBtn = document.createElement('button');
+                fieldBtn.type = 'button';
+                fieldBtn.className = 'flex-1 px-2 py-2 text-left truncate flex flex-col justify-center hover:bg-[#2a2a32] active:bg-[#19191d]';
+                fieldBtn.title = 'Antippen, um URL für diesen Speicherplatz einzugeben/zu bearbeiten';
+                fieldBtn.innerHTML = `
+                    <div class="flex items-center justify-between">
+                        <span class="font-pixel text-[8px] ${isSlotActive ? 'led-text font-bold' : 'text-amber-400'}">PLATZ #${idx + 1}</span>
+                        <span class="font-pixel text-[8px] text-slate-400"><i class="fa-solid fa-pen-to-square"></i> URL</span>
+                    </div>
+                    <span class="font-pixel text-[10px] truncate ${hasUrl ? 'text-slate-100 font-bold' : 'text-slate-500 italic'}">${displayTitle}</span>
+                `;
+                fieldBtn.addEventListener('click', () => openRadioSlotModal(idx));
+
+                // Direct Play Button on the right edge of the slot
+                const playSlotBtn = document.createElement('button');
+                playSlotBtn.type = 'button';
+                playSlotBtn.className = `px-2.5 flex items-center justify-center border-l border-[#141416] ${
+                    isSlotActive ? 'bg-amber-500 text-black font-bold' : 'bg-[#26262b] text-green-400 hover:text-amber-400'
+                }`;
+                playSlotBtn.title = 'Diesen Webradio-Speicherplatz direkt abspielen';
+                playSlotBtn.innerHTML = `<i class="fa-solid fa-play text-[10px]"></i>`;
+                playSlotBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    if (!hasUrl) {
+                        openRadioSlotModal(idx);
+                        showToast(`Bitte zuerst eine URL für Platz #${idx + 1} speichern`);
+                    } else {
+                        streamRadio(displayTitle, slot.url.trim(), idx);
+                    }
+                });
+
+                wrapper.appendChild(fieldBtn);
+                wrapper.appendChild(playSlotBtn);
+                radioSlotsContainer.appendChild(wrapper);
+            });
+        }
+
+        function openRadioSlotModal(slotIdx) {
+            editingSlotIndex = slotIdx;
+            const slot = radioSlots[slotIdx] || { name: '', url: '' };
+            modalSlotTitle.textContent = `WEBRADIO SPEICHERPLATZ #${slotIdx + 1}`;
+            slotNameInput.value = slot.name || '';
+            slotUrlInput.value = slot.url || '';
+            radioSlotModal.classList.remove('hidden');
+            setTimeout(() => slotUrlInput.focus(), 50);
+        }
+
+        function closeRadioSlotModal() {
+            radioSlotModal.classList.add('hidden');
+        }
+
+        function saveCurrentSlotFromModal(andPlay = false) {
+            const urlVal = slotUrlInput.value.trim();
+            let nameVal = slotNameInput.value.trim();
+
+            if (!urlVal) {
+                showToast("Bitte eine gültige Stream-URL eingeben!");
+                slotUrlInput.focus();
+                return;
+            }
+
+            if (!nameVal) {
+                try {
+                    const parsedUrl = new URL(urlVal);
+                    nameVal = `Radio ${editingSlotIndex + 1} (${parsedUrl.hostname})`;
+                } catch {
+                    nameVal = `Webradio #${editingSlotIndex + 1}`;
+                }
+            }
+
+            radioSlots[editingSlotIndex] = {
+                name: nameVal,
+                url: urlVal
+            };
+
+            saveRadioSlotsToStorage();
+            renderRadioSlots();
+            closeRadioSlotModal();
+            showToast(`Platz #${editingSlotIndex + 1} gespeichert!`);
+
+            if (andPlay) {
+                streamRadio(nameVal, urlVal, editingSlotIndex);
+            }
+        }
+
+        btnSaveSlot.addEventListener('click', () => saveCurrentSlotFromModal(false));
+        btnSavePlaySlot.addEventListener('click', () => saveCurrentSlotFromModal(true));
+        btnCancelSlot.addEventListener('click', closeRadioSlotModal);
+        btnCloseSlotModal.addEventListener('click', closeRadioSlotModal);
+        radioSlotModal.addEventListener('click', (e) => {
+            if (e.target === radioSlotModal) closeRadioSlotModal();
+        });
+
+        // =====================================================
+        // HELPER: FILE DOWNLOAD TRIGGER FOR S24 BROWSER
+        // =====================================================
+        function downloadTextFile(filename, content, mimeType = 'text/plain;charset=utf-8') {
+            const blob = new Blob([content], { type: mimeType });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            setTimeout(() => {
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }, 250);
+        }
+
+        function parseDurationToSeconds(durationStr) {
+            if (!durationStr || durationStr === 'LIVE' || !durationStr.includes(':')) return -1;
+            const parts = durationStr.split(':').map(Number);
+            if (parts.length === 2 && !isNaN(parts[0]) && !isNaN(parts[1])) {
+                return parts[0] * 60 + parts[1];
+            }
+            return -1;
+        }
+
+        function formatSecondsToDuration(sec) {
+            const num = parseInt(sec, 10);
+            if (isNaN(num) || num < 0) return "LIVE";
+            const m = Math.floor(num / 60);
+            const s = Math.floor(num % 60);
+            return `${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
+        }
+
+        // =====================================================
+        // 1. SAVE & OPEN THE 4 WEBRADIO STATIONS TO/FROM FILE
+        // =====================================================
+        const btnExportRadio = document.getElementById('btn-export-radio');
+        const radioFileInput = document.getElementById('radio-file-input');
+
+        btnExportRadio.addEventListener('click', () => {
+            const exportPayload = {
+                app: "Tobamp 2.91 S24 Webradio Presets",
+                version: 1,
+                exportedAt: new Date().toISOString(),
+                slots: radioSlots
+            };
+            const jsonText = JSON.stringify(exportPayload, null, 2);
+            downloadTextFile('tobamp_webradio_sender.json', jsonText, 'application/json;charset=utf-8');
+            showToast("4 Webradio-Sender als Datei gespeichert!");
+        });
+
+        radioFileInput.addEventListener('change', (e) => {
+            const file = e.target.files?.[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                const content = (ev.target?.result || '').toString().trim();
+                try {
+                    let loadedSlots = null;
+
+                    if (content.startsWith('{') || content.startsWith('[')) {
+                        const parsed = JSON.parse(content);
+                        const arr = Array.isArray(parsed) ? parsed : parsed.slots;
+                        if (Array.isArray(arr)) {
+                            loadedSlots = [0, 1, 2, 3].map(i => ({
+                                name: arr[i]?.name ? String(arr[i].name) : `Platz ${i + 1}`,
+                                url: arr[i]?.url ? String(arr[i].url) : ''
+                            }));
+                        }
+                    } else {
+                        // Also allow opening an .m3u or .pls file into the 4 radio slots
+                        const entries = file.name.toLowerCase().endsWith('.pls') || content.toLowerCase().includes('[playlist]')
+                            ? parsePlsContent(content)
+                            : parseM3uContent(content);
+                        if (entries.length > 0) {
+                            loadedSlots = [0, 1, 2, 3].map(i => ({
+                                name: entries[i]?.name || `Platz ${i + 1}`,
+                                url: entries[i]?.url || ''
+                            }));
+                        }
+                    }
+
+                    if (loadedSlots && loadedSlots.length === 4) {
+                        radioSlots = loadedSlots;
+                        saveRadioSlotsToStorage();
+                        renderRadioSlots();
+                        showToast("4 Webradio-Sender erfolgreich geladen!");
+                    } else {
+                        showToast("Ungültiges Dateiformat für Webradio-Sender");
+                    }
+                } catch (err) {
+                    showToast("Fehler beim Öffnen der Webradio-Datei");
+                }
+                radioFileInput.value = '';
+            };
+            reader.readAsText(file);
+        });
+
+        // =====================================================
+        // 2. SAVE & LOAD PLAYLIST IN .M3U AND .PLS FORMATS
+        // =====================================================
+        const btnSaveM3u = document.getElementById('btn-save-m3u');
+        const btnSavePls = document.getElementById('btn-save-pls');
+        const plFileLoadInput = document.getElementById('pl-file-load-input');
+
+        btnSaveM3u.addEventListener('click', () => {
+            if (playlist.length === 0) {
+                showToast("Playlist ist leer!");
+                return;
+            }
+            let lines = ['#EXTM3U'];
+            playlist.forEach(tr => {
+                const sec = typeof tr.durationSec === 'number' ? tr.durationSec : parseDurationToSeconds(tr.duration);
+                const ref = (!tr.isLocal && tr.url && !tr.url.startsWith('blob:'))
+                    ? tr.url
+                    : (tr.fileName || `${tr.name}.mp3`);
+                lines.push(`#EXTINF:${sec},${tr.name}`);
+                lines.push(ref);
+            });
+            downloadTextFile('tobamp_playlist.m3u', lines.join('\r\n'), 'audio/x-mpegurl;charset=utf-8');
+            showToast("Playlist als .M3U gespeichert!");
+        });
+
+        btnSavePls.addEventListener('click', () => {
+            if (playlist.length === 0) {
+                showToast("Playlist ist leer!");
+                return;
+            }
+            let lines = ['[playlist]'];
+            playlist.forEach((tr, idx) => {
+                const n = idx + 1;
+                const sec = typeof tr.durationSec === 'number' ? tr.durationSec : parseDurationToSeconds(tr.duration);
+                const ref = (!tr.isLocal && tr.url && !tr.url.startsWith('blob:'))
+                    ? tr.url
+                    : (tr.fileName || `${tr.name}.mp3`);
+                lines.push(`File${n}=${ref}`);
+                lines.push(`Title${n}=${tr.name}`);
+                lines.push(`Length${n}=${sec}`);
+            });
+            lines.push(`NumberOfEntries=${playlist.length}`);
+            lines.push('Version=2');
+            downloadTextFile('tobamp_playlist.pls', lines.join('\r\n'), 'audio/x-scpls;charset=utf-8');
+            showToast("Playlist als .PLS gespeichert!");
+        });
+
+        function parseM3uContent(text) {
+            const lines = text.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
+            const items = [];
+            let pendingTitle = null;
+            let pendingSec = -1;
+
+            for (const line of lines) {
+                if (line.toUpperCase().startsWith('#EXTM3U')) continue;
+                if (line.toUpperCase().startsWith('#EXTINF:')) {
+                    const infoPart = line.substring(8);
+                    const commaIdx = infoPart.indexOf(',');
+                    if (commaIdx !== -1) {
+                        pendingSec = parseInt(infoPart.substring(0, commaIdx).trim(), 10);
+                        pendingTitle = infoPart.substring(commaIdx + 1).trim();
+                    } else {
+                        pendingTitle = infoPart.trim();
+                    }
+                } else if (!line.startsWith('#')) {
+                    const isHttp = /^https?:\/\//i.test(line);
+                    const fileName = line.split(/[\\/]/).pop() || line;
+                    const fallbackTitle = fileName.replace(/\.[^/.]+$/, "") || line;
+                    items.push({
+                        name: pendingTitle || fallbackTitle,
+                        fileName: fileName,
+                        url: isHttp ? line : '',
+                        duration: pendingSec >= 0 ? formatSecondsToDuration(pendingSec) : (isHttp ? 'LIVE' : '00:00'),
+                        durationSec: isNaN(pendingSec) ? -1 : pendingSec,
+                        isLocal: !isHttp,
+                        isStream: isHttp,
+                        needsLocalFile: !isHttp
+                    });
+                    pendingTitle = null;
+                    pendingSec = -1;
+                }
+            }
+            return items;
+        }
+
+        function parsePlsContent(text) {
+            const lines = text.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
+            const map = {};
+
+            for (const line of lines) {
+                const match = line.match(/^(File|Title|Length)(\d+)\s*=\s*(.*)$/i);
+                if (match) {
+                    const key = match[1].toLowerCase();
+                    const idx = parseInt(match[2], 10);
+                    const val = match[3].trim();
+                    if (!map[idx]) map[idx] = {};
+                    map[idx][key] = val;
+                }
+            }
+
+            const sortedKeys = Object.keys(map).map(Number).sort((a, b) => a - b);
+            return sortedKeys.map(k => {
+                const entry = map[k];
+                const rawFile = entry.file || '';
+                const isHttp = /^https?:\/\//i.test(rawFile);
+                const fileName = rawFile.split(/[\\/]/).pop() || rawFile;
+                const sec = entry.length !== undefined ? parseInt(entry.length, 10) : -1;
+                return {
+                    name: entry.title || fileName.replace(/\.[^/.]+$/, "") || `Titel ${k}`,
+                    fileName: fileName,
+                    url: isHttp ? rawFile : '',
+                    duration: sec >= 0 ? formatSecondsToDuration(sec) : (isHttp ? 'LIVE' : '00:00'),
+                    durationSec: isNaN(sec) ? -1 : sec,
+                    isLocal: !isHttp,
+                    isStream: isHttp,
+                    needsLocalFile: !isHttp
+                };
+            }).filter(item => item.fileName || item.url);
+        }
+
+        plFileLoadInput.addEventListener('change', (e) => {
+            const file = e.target.files?.[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                const text = (ev.target?.result || '').toString();
+                const isPls = file.name.toLowerCase().endsWith('.pls') || text.toLowerCase().includes('[playlist]');
+                const parsedTracks = isPls ? parsePlsContent(text) : parseM3uContent(text);
+
+                if (parsedTracks.length === 0) {
+                    showToast("Keine gültigen Einträge in der Playlist-Datei gefunden");
+                    plFileLoadInput.value = '';
+                    return;
+                }
+
+                playlist = parsedTracks;
+                currentIndex = -1;
+                renderPlaylist();
+
+                const firstPlayableIdx = playlist.findIndex(t => !t.needsLocalFile && t.url);
+                if (firstPlayableIdx !== -1) {
+                    showToast(`${parsedTracks.length} Titel aus ${isPls ? '.PLS' : '.M3U'} geladen!`);
+                } else {
+                    showToast(`${parsedTracks.length} Titel geladen (für lokale MP3s bitte "+ MP3" wählen)`);
+                }
+                plFileLoadInput.value = '';
+            };
+            reader.readAsText(file);
+        });
+
+        // Webradio Streaming with CORS Fallback
+        function streamRadio(name, url, slotIdx = -1) {
+            initAudioContext();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            isLiveStream = true;
+            activeRadioSlot = slotIdx;
+            corsBlockedFallback = false;
+            updateDjDeckModeUI();
+            renderPlaylist();
+            renderRadioSlots();
+
+            audioElement.crossOrigin = "anonymous";
+            audioElement.playbackRate = 1.0;
+            audioElement.src = url;
+            audioElement.load();
+
+            audioElement.play().then(() => {
+                isPlaying = true;
+                sourceBadge.textContent = "WEBRADIO";
+                statusLight.className = "w-2.5 h-2.5 rounded-full bg-amber-400 shadow-[0_0_8px_#ffb000] inline-block animate-pulse";
+                statusText.textContent = "LIVE";
+                statusText.className = "font-pixel text-[11px] text-amber-400 font-bold uppercase";
+                marqueeText.textContent = `*** WEBRADIO LIVE STREAM: ${name} (${url}) ***`;
+                showToast(`Verbunden: ${name}`);
+            }).catch(() => {
+                // Graceful fallback if radio stream server blocks anonymous CORS header
+                corsBlockedFallback = true;
+                audioElement.removeAttribute('crossorigin');
+                audioElement.src = url;
+                audioElement.play().then(() => {
+                    isPlaying = true;
+                    sourceBadge.textContent = "WEBRADIO";
+                    statusLight.className = "w-2.5 h-2.5 rounded-full bg-amber-400 shadow-[0_0_8px_#ffb000] inline-block animate-pulse";
+                    statusText.textContent = "LIVE";
+                    marqueeText.textContent = `*** WEBRADIO LIVE STREAM: ${name} ***`;
+                    showToast(`Stream aktiv: ${name}`);
+                }).catch(() => {
+                    showToast("Stream konnte nicht geladen werden");
+                });
+            });
+        }
+
+        // =====================================================
+        // EQUALIZER WITH COLORED WINAMP BARS & VISUAL FEEDBACK
+        // =====================================================
+        const btnEqPower = document.getElementById('btn-eq-power');
+        const eqPowerLed = document.getElementById('eq-power-led');
+        const preampSlider = document.getElementById('preamp-slider');
+        const preampBar = document.getElementById('preamp-bar');
+        const preampValLabel = document.getElementById('preamp-val-label');
+
+        function computeEqBarColor(val, min, max) {
+            const num = parseFloat(val);
+            if (num === 0) {
+                return 'linear-gradient(to top, #1f4d1f, #2d6b2d)';
+            } else if (num > 0) {
+                // Boosted: vivid green -> amber -> hot red at the top
+                return 'linear-gradient(to top, #00b300 0%, #c8d900 55%, #ff2a00 100%)';
+            } else {
+                // Cut / attenuated: cool cyan/blue-green
+                return 'linear-gradient(to top, #0055aa 0%, #00b386 100%)';
+            }
+        }
+
+        function updatePreampVisual(val) {
+            const num = parseFloat(val);
+            const pct = ((num + 12) / 24) * 100;
+            preampBar.style.height = `${Math.max(6, pct)}%`;
+            preampBar.style.background = computeEqBarColor(num, -12, 12);
+            preampBar.style.opacity = num === 0 ? '0.35' : '0.95';
+            preampSlider.classList.toggle('eq-modified', num !== 0);
+            preampValLabel.textContent = `${num > 0 ? '+' : ''}${num}dB`;
+            preampValLabel.className = `font-pixel text-[8px] mb-0.5 ${
+                num === 0 ? 'text-slate-500' : (num > 0 ? 'amber-text font-bold' : 'led-text font-bold')
+            }`;
+        }
+
+        function updateSingleEqBandVisual(bandIdx, val) {
+            const num = parseFloat(val);
+            const pct = ((num + 15) / 30) * 100;
+            const barEl = document.querySelector(`.eq-color-bar[data-bar-band="${bandIdx}"]`);
+            const labelEl = document.querySelector(`.eq-val-label[data-label-band="${bandIdx}"]`);
+            const freqEl = document.querySelector(`.eq-freq-label[data-freq-band="${bandIdx}"]`);
+            const sliderEl = document.querySelector(`.eq-slider[data-band="${bandIdx}"]`);
+
+            if (barEl) {
+                barEl.style.height = `${Math.max(6, pct)}%`;
+                barEl.style.background = computeEqBarColor(num, -15, 15);
+                barEl.style.opacity = !eqEnabled ? '0.2' : (num === 0 ? '0.35' : '0.95');
+            }
+            if (sliderEl) {
+                sliderEl.classList.toggle('eq-modified', num !== 0);
+            }
+            if (labelEl) {
+                labelEl.textContent = num > 0 ? `+${num}` : `${num}`;
+                labelEl.className = `eq-val-label font-pixel text-[8px] mb-0.5 ${
+                    num === 0 ? 'text-slate-500' : (num > 0 ? 'amber-text font-bold' : 'led-text font-bold')
+                }`;
+            }
+            if (freqEl) {
+                freqEl.className = `eq-freq-label font-pixel text-[8px] mt-1 ${
+                    num === 0 ? 'text-slate-400' : 'text-green-400 font-bold'
+                }`;
+            }
+        }
+
+        function refreshAllEqVisuals() {
+            updatePreampVisual(preampSlider.value);
+            document.querySelectorAll('.eq-slider').forEach(slider => {
+                const band = parseInt(slider.getAttribute('data-band'));
+                updateSingleEqBandVisual(band, slider.value);
+            });
+        }
+
+        btnEqPower.addEventListener('click', () => {
+            eqEnabled = !eqEnabled;
+            btnEqPower.classList.toggle('winamp-btn-active', eqEnabled);
+            eqPowerLed.className = eqEnabled
+                ? "w-2 h-2 rounded-full bg-green-400 inline-block"
+                : "w-2 h-2 rounded-full bg-slate-600 inline-block";
+            document.querySelectorAll('.eq-slider').forEach((s, idx) => {
+                if (eqFilters[idx]) eqFilters[idx].gain.value = eqEnabled ? parseFloat(s.value) : 0;
+            });
+            refreshAllEqVisuals();
+            showToast(`Equalizer: ${eqEnabled ? 'EIN' : 'AUS'}`);
+        });
+
+        preampSlider.addEventListener('input', (e) => {
+            const db = parseFloat(e.target.value);
+            updatePreampVisual(db);
+            if (preampNode) {
+                preampNode.gain.value = Math.pow(10, db / 20);
+            }
+        });
+
+        document.querySelectorAll('.eq-slider').forEach(slider => {
+            slider.addEventListener('input', (e) => {
+                const band = parseInt(e.target.getAttribute('data-band'));
+                const val = parseFloat(e.target.value);
+                updateSingleEqBandVisual(band, val);
+                if (eqFilters[band] && eqEnabled) {
+                    eqFilters[band].gain.value = val;
+                }
+            });
+        });
+
+        document.querySelectorAll('.eq-preset-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const key = btn.getAttribute('data-preset');
+                const values = EQ_PRESETS[key];
+                if (!values) return;
+                document.querySelectorAll('.eq-slider').forEach((slider, idx) => {
+                    slider.value = values[idx];
+                    updateSingleEqBandVisual(idx, values[idx]);
+                    if (eqFilters[idx] && eqEnabled) {
+                        eqFilters[idx].gain.value = values[idx];
+                    }
+                });
+                showToast(`EQ Preset: ${key.toUpperCase()}`);
+            });
+        });
+
+        // Initialize Radio Slots & Equalizer Colored Bars on startup
+        loadRadioSlotsFromStorage();
+        renderRadioSlots();
+        refreshAllEqVisuals();
+    </script>
+</body>
+</html>
